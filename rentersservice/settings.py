@@ -10,17 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import  datetime
+import environ
 from pathlib import Path
 
+
+# initialize environment variables
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Add these at the top of your settings.py
 from os import getenv
 from urllib.parse import urlparse
 
-# from dotenv import load_dotenv
 
 # Replace the DATABASES section of your settings.py with this
-tmpPostgres = urlparse("postgresql://neondb_owner:doaVzYMul6b5@ep-long-sun-a5wrc4nj.us-east-2.aws.neon.tech/neondb?sslmode=require")
+tmpPostgres = urlparse(env('DATABASE_URL'))
 
 DATABASES = {
     'default': {
@@ -33,7 +38,6 @@ DATABASES = {
     }
 }
 
-from django.conf.global_settings import AUTH_USER_MODEL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,12 +47,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=e155+==9rmi63mo(9c4!i%251sk-bk%v*7=k0&vmg1t)02!1*'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,7 +91,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'rentersservice.urls'
 # CORS_URLS_REGEX= r"^/api/.*"
 CORS_ALLOWED_ORIGINS=[
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://localhost:8000'
 ]
 
 TEMPLATES = [

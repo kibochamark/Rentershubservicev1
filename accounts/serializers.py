@@ -9,12 +9,11 @@ class RoleSerializer(serializers.Serializer):
 
 class AccountSerializer(serializers.ModelSerializer):
     role_name = RoleSerializer(source='role', read_only=True)
-    url= serializers.HyperlinkedIdentityField(view_name='account-detail', lookup_field='pk')
+    # url= serializers.HyperlinkedIdentityField(view_name='account-detail', lookup_field='pk')
     class Meta:
         model=RentersUser
         fields=[
             'pk',
-            'url',
             'first_name',
             'email',
             'contact',

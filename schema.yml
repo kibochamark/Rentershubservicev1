@@ -297,10 +297,6 @@ components:
           type: integer
           readOnly: true
           title: ID
-        url:
-          type: string
-          format: uri
-          readOnly: true
         first_name:
           type: string
           maxLength: 150
@@ -327,7 +323,6 @@ components:
       - email
       - pk
       - role_name
-      - url
       - username
     Register:
       type: object
