@@ -109,6 +109,12 @@ class AccountsViewSet(viewsets.ViewSet):
                     "error":"password is required"
                 }, status=HTTPStatus.BAD_REQUEST)
 
+
+            if obj.status is not "APPROVED":
+                return Response({
+                    "error": "Please wait to be approved by admin"
+                }, status=HTTPStatus.BAD_REQUEST)
+
             user = authenticate(request, username=obj.email, password=password)
             print(user)
 
