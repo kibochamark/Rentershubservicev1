@@ -81,6 +81,8 @@ class AccountsViewSet(viewsets.ViewSet):
         """
         if self.action == 'list' or self.action == 'retrieve':
             permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        elif self.action == "loginuser":
+            permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
@@ -110,10 +112,14 @@ class AccountsViewSet(viewsets.ViewSet):
                 }, status=HTTPStatus.BAD_REQUEST)
 
 
-            if obj.status is not "APPROVED":
+            print(obj.approval_status)
+
+            if obj.approval_status != "APPROVED":
                 return Response({
                     "error": "Please wait to be approved by admin"
                 }, status=HTTPStatus.BAD_REQUEST)
+
+            print(obj.email, password)
 
             user = authenticate(request, username=obj.email, password=password)
             print(user)
