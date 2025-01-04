@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.base_user import BaseUserManager
+from django.core.validators import RegexValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -80,9 +81,26 @@ class CustomUserManager(BaseUserManager):
 
 class RentersUser(AbstractUser, models.Model):
 
-    role= models.ForeignKey(RentersRole, on_delete=models.SET_NULL, null=True, blank=True)
+    class ApprovalStatus(models.TextChoices):
+        APPROVED = "APPROVED", 'Approved'
+        PENDING= "PENDING", 'Pending'
+        REJECTED = "REJECTED", 'Rejected'
+
+
+    role = models.ForeignKey(RentersRole, on_delete=models.CASCADE, null=True)
+    approval_status= models.CharField(max_length=20, choices=ApprovalStatus.choices, null=True, default="PENDING")
     email = models.EmailField("email address", unique=True)
-    contact = models.CharField(max_length=11)
+    contact = models.CharField(max_length=10, validators=[RegexValidator(
+ regex=r"^\d{10}", message="Phone number must be 10 digits only.")], unique=True)
+    isAcceptedTermsAndConditions = models.BooleanField(default=True)
+
+
+    # otp fields
+    otp = models.CharField(max_length=6, null=True, blank=True)
+    otp_expiry = models.DateTimeField(blank=True, null=True)
+    max_otp_try = models.CharField(max_length=2, default=3)
+    otp_max_out = models.DateTimeField(blank=True, null=True)
+
     created_at = models.DateField(auto_created=True, auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 

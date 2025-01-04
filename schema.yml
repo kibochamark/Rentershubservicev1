@@ -126,6 +126,8 @@ paths:
       tags:
       - api
       security:
+      - jwtAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -147,12 +149,81 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
+  /api/token/:
+    post:
+      operationId: api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MyTokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyTokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/v1/accounts/create/otp:
+    post:
+      operationId: api_v1_accounts_create_otp_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          description: No response body
   /api/v1/accounts/create/role/:
     post:
       operationId: api_v1_accounts_create_role_create
       description: Create an instance of a user
       tags:
       - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
       responses:
         '201':
           content:
@@ -166,6 +237,9 @@ paths:
       description: Create an instance of a user
       tags:
       - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
       responses:
         '201':
           content:
@@ -173,6 +247,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/Register'
           description: ''
+  /api/v1/accounts/login/user/:
+    post:
+      operationId: api_v1_accounts_login_user_create
+      description: login user and generate token
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
   /api/v1/accounts/role/{id}/:
     get:
       operationId: api_v1_accounts_role_retrieve
@@ -186,6 +272,8 @@ paths:
       tags:
       - api
       security:
+      - jwtAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -206,6 +294,9 @@ paths:
         required: true
       tags:
       - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
       responses:
         '204':
           description: No response body
@@ -216,6 +307,8 @@ paths:
       tags:
       - api
       security:
+      - jwtAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -238,6 +331,9 @@ paths:
         required: true
       tags:
       - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
       responses:
         '200':
           content:
@@ -257,6 +353,9 @@ paths:
         required: true
       tags:
       - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
       responses:
         '200':
           content:
@@ -277,6 +376,8 @@ paths:
       tags:
       - api
       security:
+      - jwtAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -297,6 +398,9 @@ paths:
         required: true
       tags:
       - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
       responses:
         '204':
           description: No response body
@@ -307,6 +411,8 @@ paths:
       tags:
       - api
       security:
+      - jwtAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -317,78 +423,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
           description: ''
-  /api/v1/auth/convert-token/:
-    post:
-      operationId: api_v1_auth_convert_token_create
-      description: |-
-        Implements an endpoint to convert a provider token to an access token
-
-        The endpoint is used in the following flows:
-
-        * Authorization code
-        * Client credentials
-      tags:
-      - api
-      security:
-      - {}
-      responses:
-        '200':
-          description: No response body
-  /api/v1/auth/disconnect-backend/:
-    post:
-      operationId: api_v1_auth_disconnect_backend_create
-      description: An endpoint for disconnect social auth backend providers such as
-        Facebook.
-      tags:
-      - api
-      responses:
-        '200':
-          description: No response body
-  /api/v1/auth/invalidate-refresh-tokens/:
-    post:
-      operationId: api_v1_auth_invalidate_refresh_tokens_create
-      description: Invalidate all refresh tokens associated with a client id.
-      tags:
-      - api
-      responses:
-        '200':
-          description: No response body
-  /api/v1/auth/invalidate-sessions/:
-    post:
-      operationId: api_v1_auth_invalidate_sessions_create
-      description: Delete all access tokens associated with a client id.
-      tags:
-      - api
-      responses:
-        '200':
-          description: No response body
-  /api/v1/auth/revoke-token/:
-    post:
-      operationId: api_v1_auth_revoke_token_create
-      description: Implements an endpoint to revoke access or refresh tokens
-      tags:
-      - api
-      responses:
-        '200':
-          description: No response body
-  /api/v1/auth/token/:
-    post:
-      operationId: api_v1_auth_token_create
-      description: |-
-        Implements an endpoint to provide access tokens
-
-        The endpoint is used in the following flows:
-
-        * Authorization code
-        * Password
-        * Client credentials
-      tags:
-      - api
-      security:
-      - {}
-      responses:
-        '200':
-          description: No response body
 components:
   schemas:
     Account:
@@ -408,7 +442,8 @@ components:
           maxLength: 254
         contact:
           type: string
-          maxLength: 11
+          pattern: ^\d{10}
+          maxLength: 10
         role_name:
           allOf:
           - $ref: '#/components/schemas/Role'
@@ -419,12 +454,32 @@ components:
             only.
           pattern: ^[\w.@+-]+$
           maxLength: 150
+        status:
+          type: string
+          readOnly: true
+        terms_and_conditions:
+          type: string
+          readOnly: true
       required:
       - contact
       - email
       - pk
       - role_name
+      - status
+      - terms_and_conditions
       - username
+    MyTokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
     Register:
       type: object
       properties:
@@ -447,13 +502,25 @@ components:
           nullable: true
         contact:
           type: string
-          maxLength: 11
+          pattern: ^\d{10}
+          maxLength: 10
         username:
           type: string
           description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
             only.
           pattern: ^[\w.@+-]+$
           maxLength: 150
+        otp:
+          type: string
+          nullable: true
+          maxLength: 6
+        otp_expiry:
+          type: string
+          format: date-time
+          nullable: true
+        max_otp_try:
+          type: string
+          maxLength: 2
       required:
       - contact
       - email
@@ -489,7 +556,24 @@ components:
       required:
       - pk
       - role
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
   securitySchemes:
-    oauth2:
-      type: oauth2
-      flows: {}
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

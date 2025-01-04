@@ -3,12 +3,15 @@ from rest_framework.decorators import api_view
 
 
 
-from .views import AccountsViewSet, RolesViewSet
+from .views import AccountsViewSet, RolesViewSet, OtpViewset
 
 urlpatterns=[
     # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('create/user/', AccountsViewSet.as_view({
         'post':'create'
+    })),
+    path('login/user/', AccountsViewSet.as_view({
+        'post':'loginuser'
     })),
     path('update/user/<int:pk>', AccountsViewSet.as_view({
         'patch':'patch'
@@ -35,6 +38,12 @@ urlpatterns=[
     })),
     path('role/<int:pk>/', RolesViewSet.as_view({
         'get':'retrieve'
+    })),
+
+
+#     urls
+    path('create/otp', OtpViewset.as_view({
+        'post':'create'
     }))
 
 ]

@@ -67,13 +67,10 @@ INSTALLED_APPS = [
     # external packages
     'corsheaders',
     'rest_framework',
-    # 'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     'drf_spectacular',
 
-    # Oauth
-    'oauth2_provider',
-    'social_django',
-    'drf_social_oauth2',
+
 
 
     # internal apps
@@ -110,9 +107,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-            #     Oauth
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
+
             ],
         },
     },
@@ -139,19 +134,16 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES':[
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-# 'oauth2_provider.ext.rest_framework.OAuth2Authentication',  # django-oauth-toolkit < 1.0.0
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',  # django-oauth-toolkit >= 1.0.0
-        'drf_social_oauth2.authentication.SocialAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     ],
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
 
 }
 
 
-SPECTACULAR_SETTINGS={
-    "TTTLE":"Renters Hub Service V1.0.0",
+spectacular_settings={
+    "title":"Renters Hub Service V1.0.0",
 }
 
 # Password validation
@@ -199,37 +191,42 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL="accounts.RentersUser"
 
-# SIMPLE_JWT={
-#     'ACCESS_TOKEN_LIFETIME':datetime.timedelta(minutes=60),
-#     'REFRESH_TOKEN_LIFETIME':datetime.timedelta(minutes=1)
-# }
+SIMPLE_JWT={
+    'ACCESS_TOKEN_LIFETIME':datetime.timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME':datetime.timedelta(minutes=1),
+    "TOKEN_OBTAIN_SERIALIZER": "accounts.authentication.MyTokenObtainPairSerializer",
+
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": env('SECRET_KEY'),
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+
+    "JTI_CLAIM": "jti",
+
+}
 
 
-# OAUTH
-AUTHENTICATION_BACKENDS = (
-    # Others auth providers (e.g. Google, OpenId, etc)
-    # Google  OAuth2
-    'social_core.backends.google.GoogleOAuth2',
-    # drf-social-oauth2
-    'drf_social_oauth2.backends.DjangoOAuth2',
-    # Django
-    'django.contrib.auth.backends.ModelBackend',
-#
 
 
 
 
 
 
-)
-
-
-
-
-
-
-# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-]
