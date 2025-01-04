@@ -126,8 +126,6 @@ paths:
       tags:
       - api
       security:
-      - jwtAuth: []
-      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -149,80 +147,25 @@ paths:
                 type: object
                 additionalProperties: {}
           description: ''
-  /api/token/:
+  /api/v1/accounts/create/role/:
     post:
-      operationId: api_token_create
-      description: |-
-        Takes a set of user credentials and returns an access and refresh JSON web
-        token pair to prove the authentication of those credentials.
+      operationId: api_v1_accounts_create_role_create
+      description: Create an instance of a user
       tags:
       - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPair'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPair'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/TokenObtainPair'
-        required: true
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenObtainPair'
+                $ref: '#/components/schemas/RoleSerializerModel'
           description: ''
-  /api/token/refresh/:
+  /api/v1/accounts/create/user/:
     post:
-      operationId: api_token_refresh_create
-      description: |-
-        Takes a refresh type JSON web token and returns an access type JSON web
-        token if the refresh token is valid.
+      operationId: api_v1_accounts_create_user_create
+      description: Create an instance of a user
       tags:
       - api
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TokenRefresh'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/TokenRefresh'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/TokenRefresh'
-        required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenRefresh'
-          description: ''
-  /create/user/:
-    post:
-      operationId: create_user_create
-      tags:
-      - create
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Register'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Register'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Register'
-        required: true
-      security:
-      - jwtAuth: []
-      - cookieAuth: []
       responses:
         '201':
           content:
@@ -230,9 +173,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Register'
           description: ''
-  /test/{id}/delete:
-    delete:
-      operationId: test_delete_destroy
+  /api/v1/accounts/role/{id}/:
+    get:
+      operationId: api_v1_accounts_role_retrieve
+      description: retrieve an instance of a user
       parameters:
       - in: path
         name: id
@@ -240,16 +184,51 @@ paths:
           type: integer
         required: true
       tags:
-      - test
+      - api
       security:
-      - jwtAuth: []
-      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleSerializerModel'
+          description: ''
+  /api/v1/accounts/role/{id}/delete:
+    delete:
+      operationId: api_v1_accounts_role_delete_destroy
+      description: Delete an instance of a user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
       responses:
         '204':
           description: No response body
-  /update/user/{id}:
+  /api/v1/accounts/roles:
+    get:
+      operationId: api_v1_accounts_roles_list
+      description: Get all users
+      tags:
+      - api
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleSerializerModel'
+          description: ''
+  /api/v1/accounts/update/role/{id}:
     patch:
-      operationId: update_user_partial_update
+      operationId: api_v1_accounts_update_role_partial_update
       description: partially update an instance of a user
       parameters:
       - in: path
@@ -258,10 +237,26 @@ paths:
           type: integer
         required: true
       tags:
-      - update
-      security:
-      - jwtAuth: []
-      - cookieAuth: []
+      - api
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleSerializerModel'
+          description: ''
+  /api/v1/accounts/update/user/{id}:
+    patch:
+      operationId: api_v1_accounts_update_user_partial_update
+      description: partially update an instance of a user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
       responses:
         '200':
           content:
@@ -269,15 +264,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/Register'
           description: ''
-  /users:
+  /api/v1/accounts/user/{id}/:
     get:
-      operationId: users_list
+      operationId: api_v1_accounts_user_retrieve
+      description: retrieve an instance of a user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: ''
+  /api/v1/accounts/user/{id}/delete:
+    delete:
+      operationId: api_v1_accounts_user_delete_destroy
+      description: Delete an instance of a user
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      responses:
+        '204':
+          description: No response body
+  /api/v1/accounts/users:
+    get:
+      operationId: api_v1_accounts_users_list
       description: Get all users
       tags:
-      - users
+      - api
       security:
-      - jwtAuth: []
-      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -288,6 +317,78 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
           description: ''
+  /api/v1/auth/convert-token/:
+    post:
+      operationId: api_v1_auth_convert_token_create
+      description: |-
+        Implements an endpoint to convert a provider token to an access token
+
+        The endpoint is used in the following flows:
+
+        * Authorization code
+        * Client credentials
+      tags:
+      - api
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/disconnect-backend/:
+    post:
+      operationId: api_v1_auth_disconnect_backend_create
+      description: An endpoint for disconnect social auth backend providers such as
+        Facebook.
+      tags:
+      - api
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/invalidate-refresh-tokens/:
+    post:
+      operationId: api_v1_auth_invalidate_refresh_tokens_create
+      description: Invalidate all refresh tokens associated with a client id.
+      tags:
+      - api
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/invalidate-sessions/:
+    post:
+      operationId: api_v1_auth_invalidate_sessions_create
+      description: Delete all access tokens associated with a client id.
+      tags:
+      - api
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/revoke-token/:
+    post:
+      operationId: api_v1_auth_revoke_token_create
+      description: Implements an endpoint to revoke access or refresh tokens
+      tags:
+      - api
+      responses:
+        '200':
+          description: No response body
+  /api/v1/auth/token/:
+    post:
+      operationId: api_v1_auth_token_create
+      description: |-
+        Implements an endpoint to provide access tokens
+
+        The endpoint is used in the following flows:
+
+        * Authorization code
+        * Password
+        * Client credentials
+      tags:
+      - api
+      security:
+      - {}
+      responses:
+        '200':
+          description: No response body
 components:
   schemas:
     Account:
@@ -366,44 +467,29 @@ components:
           readOnly: true
       required:
       - role
-    TokenObtainPair:
+    RoleEnum:
+      enum:
+      - ADMIN
+      - LANDLORD
+      - GROUNDAGENT
+      type: string
+      description: |-
+        * `ADMIN` - Admin
+        * `LANDLORD` - Landlord
+        * `GROUNDAGENT` - GroundAgent
+    RoleSerializerModel:
       type: object
       properties:
-        email:
-          type: string
-          writeOnly: true
-        password:
-          type: string
-          writeOnly: true
-        access:
-          type: string
+        pk:
+          type: integer
           readOnly: true
-        refresh:
-          type: string
-          readOnly: true
+          title: ID
+        role:
+          $ref: '#/components/schemas/RoleEnum'
       required:
-      - access
-      - email
-      - password
-      - refresh
-    TokenRefresh:
-      type: object
-      properties:
-        access:
-          type: string
-          readOnly: true
-        refresh:
-          type: string
-          writeOnly: true
-      required:
-      - access
-      - refresh
+      - pk
+      - role
   securitySchemes:
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
-    jwtAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    oauth2:
+      type: oauth2
+      flows: {}

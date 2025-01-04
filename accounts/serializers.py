@@ -1,4 +1,4 @@
-from accounts.models import RentersUser
+from accounts.models import RentersUser, RentersRole
 from django.contrib.auth.models import User
 from rest_framework import  serializers
 
@@ -41,3 +41,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         ]
 
 
+
+
+class RoleSerializerModel(serializers.ModelSerializer):
+    class Meta:
+        model=RentersRole
+        fields=[
+            'pk',
+            'role'
+        ]

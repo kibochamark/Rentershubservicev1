@@ -23,8 +23,9 @@ from rest_framework.documentation import include_docs_urls
 from drf_spectacular.views import  SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    path('api/v1/auth/', include('drf_social_oauth2.urls', namespace='drf')),
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
+    path('api/v1/accounts/', include('accounts.urls')),
         path('api-auth/', include('rest_framework.urls')),
     # path('docs/', include_docs_urls(title='RentersHubAPi')),
     # path('schema', get_schema_view(
@@ -35,7 +36,7 @@ urlpatterns = [
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 
-    path('api/schema/docs/', SpectacularSwaggerView.as_view(url_name='schema'))
+    path('', SpectacularSwaggerView.as_view(url_name='schema'))
 
 
 ]
