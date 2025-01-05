@@ -44,6 +44,9 @@ urlpatterns=[
 #     urls
     path('create/otp', OtpViewset.as_view({
         'post':'create'
+    })),
+    path('verify/otp/change/password', OtpViewset.as_view({
+        'post':'verifyandupdatepassword'
     }))
 
 ]

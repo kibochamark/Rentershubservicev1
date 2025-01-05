@@ -1,8 +1,9 @@
+import datetime
 from http import HTTPStatus
 from logging import raiseExceptions
 
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import check_password, make_password
 from django.db.models.expressions import result
 from django.shortcuts import render, get_object_or_404
 from drf_spectacular.utils import extend_schema
@@ -16,7 +17,9 @@ from accounts.models import RentersUser, RentersRole
 from accounts.serializers import AccountSerializer, RegisterSerializer, RoleSerializerModel
 from rest_framework import  viewsets
 
-from accounts.util import send_otp, generate_otp, get_tokens_for_user
+from accounts.util import send_otp, generate_otp, get_tokens_for_user, verify_otp
+from django.utils import timezone
+
 
 
 # Create your views here.
@@ -82,6 +85,7 @@ class AccountsViewSet(viewsets.ViewSet):
         if self.action == 'list' or self.action == 'retrieve':
             permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         elif self.action == "loginuser":
+            print(self.action)
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]
@@ -168,7 +172,7 @@ class AccountsViewSet(viewsets.ViewSet):
         Create an instance of a user
         """
         body = request.data
-        serializer = RegisterSerializer(data=body)
+        serializer = RegisterSerializer(data=body, context={'request':request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=HTTPStatus.CREATED)
@@ -206,7 +210,7 @@ class AccountsViewSet(viewsets.ViewSet):
         # print(request.data, pk)
         obj= get_object_or_404(self.queryset, pk=pk)
         serializer = RegisterSerializer(obj, data=request.data,
-                                         partial=True)  # set partial=True to update a data partially
+                                         partial=True, context={'request':request})  # set partial=True to update a data partially
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(data=serializer.data, status=200)
@@ -413,27 +417,126 @@ class RolesViewSet(viewsets.ViewSet):
 
 class OtpViewset(viewsets.ViewSet):
 
-    permission_classes=[permissions.AllowAny]
+
+    queryset= RentersUser.objects.all()
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        print(self.action)
+        if self.action == 'create' or self.action == 'verifyandupdatepassword':
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
 
+    # @extend_schema(responses=RegisterSerializer)
     def create(self, request):
         try:
-            contact = request.body.get('contact')
+            contact = request.data.get('contact')
             if not contact:
                 return Response({
                     "error":"contact should be available"
                 }, status=HTTPStatus.BAD_REQUEST)
 
-            otpcode=generate_otp()
-            send_otp(mobile=contact, otp=otpcode)
+            obj = get_object_or_404(self.queryset, contact=contact)
+
+            if not obj:
+                return Response({
+                    "error": "user not found"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+            # check if user has exceeded maximum tries
+            if int(obj.max_otp_try) == 0 and obj.otp_max_out and timezone.now() < obj.otp_max_out:
+                return Response(
+                    "Max OTP try reached, try after an hour",
+                    status=HTTPStatus.BAD_REQUEST,
+                )
+
+            otp, secret_key=generate_otp()
+
+            # print(otp, secret_key)
+            # send_otp(mobile=contact, otp=otpcode)
 
 
-            return Response({
-                "message":f"Otp sent successfully to {contact}"
-            }, status=HTTPStatus.OK)
+            serializer = RegisterSerializer(obj, data={
+                "otp_secret":secret_key,
+                "max_otp_try":str((int(obj.max_otp_try) -1)),
+                "otp_max_out" : timezone.now() + datetime.timedelta(hours=1)
+            }, partial=True, context={'request':request})
+
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response({
+                    "message": f"Otp sent successfully to {contact} , otp -{otp}"
+                }, status=HTTPStatus.OK)
+
+            raise Exception("Something went wrong")
 
         except Exception as e:
             return Response(exception=e, status=HTTPStatus.BAD_REQUEST)
+
+
+
+    @extend_schema(responses=RegisterSerializer)
+    def verifyandupdatepassword(self, request):
+        try:
+
+            # print(request.user)
+
+            contact = request.data.get('contact')
+            password = request.data.get('password')
+            user_otp= request.data.get('otp')
+
+
+            # print(contact)
+
+            if not contact and not user_otp or (not contact or not user_otp):
+                return Response({
+                    "error": "Missing required fields"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+            obj = get_object_or_404(RentersUser, contact=contact)
+
+            # print(obj.username)
+
+            if not obj:
+                return Response({
+                    "error": "user not found"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+
+            # print(obj.otp_secret)
+
+            if not verify_otp(int(user_otp), secret_key=obj.otp_secret):
+                return Response({
+                    "error": "invalid otp"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+            password = make_password(password)
+            serializer = RegisterSerializer(obj, data={
+                "password":password,
+                "otp":user_otp,
+                "max_out_otp":3
+            }, partial=True, context={'request':request})
+
+
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response({
+                    "message": "Password changed successfully"
+                })
+
+            return Response({
+                "error": "something went wrong"
+            }, status=HTTPStatus.BAD_REQUEST)
+
+        except Exception as e:
+            return Response({
+                "error":"Failed to verify resource"
+            }, status=HTTPStatus.BAD_REQUEST)
 
 
 

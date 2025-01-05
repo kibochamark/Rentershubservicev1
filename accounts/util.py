@@ -1,5 +1,9 @@
 import random
 
+# otp using pyotp
+import pyotp
+
+
 
 def send_otp(mobile, otp):
  """
@@ -15,11 +19,29 @@ def send_otp(mobile, otp):
 
 
 
-def generate_otp():
+def generate_otp(duration=120):
+    # Create a secret key (keep it secret!)̥
+    secret_key = pyotp.random_base32()
 
-    otp= random.randint(1000, 9999)
+    otp = pyotp.TOTP(secret_key, interval=duration)
+    # Generate an OTP using TOTP after every 30 seconds
+    print("Your TOTP is: ", otp.now())
 
-    return otp
+
+    return (otp.now(), secret_key)
+
+
+
+
+
+def verify_otp(user_otp, secret_key, duration=120):
+    otp = pyotp.TOTP(secret_key, interval=duration)
+
+    if otp.verify(user_otp):
+        return  True
+
+
+    return False
 
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -31,3 +53,11 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+
+
+
+
+
+
+
+
