@@ -13,8 +13,8 @@ from rest_framework.response import  Response
 from rest_framework import  generics, permissions
 from rest_framework.views import APIView
 
-from accounts.models import RentersUser, RentersRole
-from accounts.serializers import AccountSerializer, RegisterSerializer, RoleSerializerModel
+from accounts.models import RentersUser, RentersRole, Otp
+from accounts.serializers import AccountSerializer, RegisterSerializer, RoleSerializerModel, OtpSerializer
 from rest_framework import  viewsets
 
 from accounts.util import send_otp, generate_otp, get_tokens_for_user, verify_otp
@@ -425,7 +425,7 @@ class OtpViewset(viewsets.ViewSet):
         Instantiates and returns the list of permissions that this view requires.
         """
         print(self.action)
-        if self.action == 'create' or self.action == 'verifyandupdatepassword':
+        if self.action == 'create' or self.action == 'verifyandupdatepassword' or self.action == "verifyotp":
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]
@@ -441,42 +441,49 @@ class OtpViewset(viewsets.ViewSet):
                     "error":"contact should be available"
                 }, status=HTTPStatus.BAD_REQUEST)
 
-            obj = get_object_or_404(self.queryset, contact=contact)
 
-            if not obj:
-                return Response({
-                    "error": "user not found"
-                }, status=HTTPStatus.BAD_REQUEST)
+            print(contact)
 
-            # check if user has exceeded maximum tries
-            if int(obj.max_otp_try) == 0 and obj.otp_max_out and timezone.now() < obj.otp_max_out:
-                return Response(
-                    "Max OTP try reached, try after an hour",
-                    status=HTTPStatus.BAD_REQUEST,
-                )
 
             otp, secret_key=generate_otp()
+
+            # # add secret to otp
+            #
+            obj = Otp.objects.filter(secret=secret_key).first()
+            #
+            #
+            # print(obj, "non")
+
+
+            if obj is not None:
+                serializer = OtpSerializer(obj, data={
+                    "secret":secret_key
+                },  partial=True)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+            else:
+
+                serializer = OtpSerializer(data={
+                    "secret": secret_key
+                })
+                print(serializer.is_valid())
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+
+
 
             # print(otp, secret_key)
             # send_otp(mobile=contact, otp=otpcode)
 
 
-            serializer = RegisterSerializer(obj, data={
-                "otp_secret":secret_key,
-                "max_otp_try":str((int(obj.max_otp_try) -1)),
-                "otp_max_out" : timezone.now() + datetime.timedelta(hours=1)
-            }, partial=True, context={'request':request})
-
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response({
-                    "message": f"Otp sent successfully to {contact} , otp -{otp}"
-                }, status=HTTPStatus.OK)
-
-            raise Exception("Something went wrong")
+            return Response({
+                "message": f"Otp sent successfully to {contact} , otp -{otp}"
+            }, status=HTTPStatus.OK)
 
         except Exception as e:
-            return Response(exception=e, status=HTTPStatus.BAD_REQUEST)
+            return Response({
+                "error":"failed to create resource"
+            }, status=HTTPStatus.BAD_REQUEST)
 
 
 
@@ -527,7 +534,7 @@ class OtpViewset(viewsets.ViewSet):
                 serializer.save()
                 return Response({
                     "message": "Password changed successfully"
-                })
+                }, status=HTTPStatus.OK)
 
             return Response({
                 "error": "something went wrong"
@@ -540,3 +547,41 @@ class OtpViewset(viewsets.ViewSet):
 
 
 
+    def verifyotp(self, request):
+        try:
+
+            # print(request.user)
+
+            user_otp = request.data.get('otp')
+
+            # print(contact)
+
+            if not user_otp :
+                return Response({
+                    "error": "Missing required fields"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+            obj = Otp.objects.first()
+
+            if not obj:
+                return Response({
+                    "error": "secret does not exist"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+            # print(obj.otp_secret)
+
+            if not verify_otp(int(user_otp), secret_key=obj.secret):
+                return Response({
+                    "error": "invalid otp"
+                }, status=HTTPStatus.BAD_REQUEST)
+
+
+
+            return Response({
+                "message": "Verified successfully"
+            }, status=HTTPStatus.OK)
+
+        except Exception as e:
+            return Response({
+                "error": "Failed to verify resource"
+            }, status=HTTPStatus.BAD_REQUEST)

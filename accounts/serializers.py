@@ -4,7 +4,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
 
 
-from accounts.models import RentersUser, RentersRole
+from accounts.models import RentersUser, RentersRole, Otp
 from django.contrib.auth.models import User
 from rest_framework import  serializers
 
@@ -29,8 +29,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'username',
             'status',
             'terms_and_conditions',
-            'password',
-            'otp_secret'
+
         ]
 
     def get_status(self, obj):
@@ -55,24 +54,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             'last_name',
             'role',
             'contact',
-            'username',
-            'otp',
-            'otp_expiry',
-            'max_otp_try',
-            'otp_secret'
+            'username'
         ]
 
-    def create(self, validated_data):
-
-        print(validated_data)
-
-        otp_expiry = timezone.now() + datetime.timedelta(hours=1)
-        max_otp_try = 2
-        validated_data["otp_expiry"] = otp_expiry
-        validated_data["max_otp_try"] = max_otp_try
-
-        user = RentersUser.objects.create(**validated_data)
-        return user
 
 
 
@@ -88,5 +72,10 @@ class RoleSerializerModel(serializers.ModelSerializer):
 
 
 
-class LoginSerializer(serializers.ModelSerializer):
-        pass
+class OtpSerializer(serializers.ModelSerializer):
+        class Meta:
+            model=Otp
+            fields=[
+                'secret'
+            ]
+

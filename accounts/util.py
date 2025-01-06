@@ -19,7 +19,7 @@ def send_otp(mobile, otp):
 
 
 
-def generate_otp(duration=120):
+def generate_otp(duration=300):
     # Create a secret key (keep it secret!)̥
     secret_key = pyotp.random_base32()
 
@@ -34,7 +34,7 @@ def generate_otp(duration=120):
 
 
 
-def verify_otp(user_otp, secret_key, duration=120):
+def verify_otp(user_otp, secret_key, duration=300):
     otp = pyotp.TOTP(secret_key, interval=duration)
 
     if otp.verify(user_otp):

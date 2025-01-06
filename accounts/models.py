@@ -95,12 +95,7 @@ class RentersUser(AbstractUser, models.Model):
     isAcceptedTermsAndConditions = models.BooleanField(default=True)
 
 
-    # otp fields
-    otp = models.CharField(max_length=6, null=True, blank=True)
-    otp_expiry = models.DateTimeField(blank=True, null=True)
-    max_otp_try = models.CharField(max_length=2, default=3)
-    otp_max_out = models.DateTimeField(blank=True, null=True)
-    otp_secret = models.CharField(blank=True, max_length=2000, null=True)
+
 
     created_at = models.DateField(auto_created=True, auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -121,6 +116,13 @@ class RentersUser(AbstractUser, models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
+
+
+
+
+class Otp(models.Model):
+
+    secret = models.CharField(max_length=2000, unique=True)
 
 
 

@@ -256,6 +256,7 @@ paths:
       security:
       - jwtAuth: []
       - cookieAuth: []
+      - {}
       responses:
         '200':
           description: No response body
@@ -423,6 +424,34 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
           description: ''
+  /api/v1/accounts/verify/otp:
+    post:
+      operationId: api_v1_accounts_verify_otp_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/v1/accounts/verify/otp/change/password:
+    post:
+      operationId: api_v1_accounts_verify_otp_change_password_create
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+          description: ''
 components:
   schemas:
     Account:
@@ -510,17 +539,6 @@ components:
             only.
           pattern: ^[\w.@+-]+$
           maxLength: 150
-        otp:
-          type: string
-          nullable: true
-          maxLength: 6
-        otp_expiry:
-          type: string
-          format: date-time
-          nullable: true
-        max_otp_try:
-          type: string
-          maxLength: 2
       required:
       - contact
       - email
