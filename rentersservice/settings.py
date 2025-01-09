@@ -92,7 +92,6 @@ INSTALLED_APPS = [
 # django.contrib.sites
 SITE_ID = 1
 
-GDAL_LIBRARY_PATH ='C:\Program Files\GDAL'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
