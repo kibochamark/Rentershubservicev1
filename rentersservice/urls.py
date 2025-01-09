@@ -32,6 +32,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     path('api/v1/accounts/', include('accounts.urls')),
+    path('api/v1/listing/', include('listing.urls')),
         path('api-auth/', include('rest_framework.urls')),
     # path('docs/', include_docs_urls(title='RentersHubAPi')),
     # path('schema', get_schema_view(

@@ -86,7 +86,8 @@ INSTALLED_APPS = [
 
     # internal apps
 
-    'accounts'
+    'accounts',
+    'listing'
 ]
 
 # django.contrib.sites
