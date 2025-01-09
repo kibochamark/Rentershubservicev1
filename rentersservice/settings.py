@@ -27,16 +27,16 @@ from urllib.parse import urlparse
 # Replace the DATABASES section of your settings.py with this
 tmpPostgres = urlparse(env('DATABASE_URL'))
 #
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': tmpPostgres.path.replace('/', ''),
-#         'USER': tmpPostgres.username,
-#         'PASSWORD': tmpPostgres.password,
-#         'HOST': tmpPostgres.hostname,
-#         'PORT': 5432,
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
+    }
+}
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -64,12 +64,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     # external packages
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_spectacular',
+'rest_framework.authtoken',
 
+        'django.contrib.sites',
+
+
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+'allauth.socialaccount.providers.google',
+    'dj_rest_auth.registration',
 
 
 
@@ -77,6 +88,11 @@ INSTALLED_APPS = [
 
     'accounts'
 ]
+
+# django.contrib.sites
+SITE_ID = 1
+
+GDAL_LIBRARY_PATH ='C:\Program Files\GDAL'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,8 +102,14 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',#
+    "allauth.account.middleware.AccountMiddleware",
 ]
+
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # Use Email / Password authentication
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none" # Do not require email confirmation
 
 ROOT_URLCONF = 'rentersservice.urls'
 # CORS_URLS_REGEX= r"^/api/.*"
@@ -108,6 +130,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+
             ],
         },
     },
@@ -119,12 +142,12 @@ WSGI_APPLICATION = 'rentersservice.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 REST_FRAMEWORK = {
@@ -145,6 +168,18 @@ REST_FRAMEWORK = {
 spectacular_settings={
     "title":"Renters Hub Service V1.0.0",
 }
+
+SOCIAL_AUTH_FACEBOOK_KEY = 'your app client id'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'your app client secret'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]  # optional
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'locale': 'ru_RU'}  # optional
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+'social_core.backends.google.GoogleOAuth2',
+    # and maybe some others ...
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -230,3 +265,28 @@ SIMPLE_JWT={
 
 
 
+# Google OAuth
+GOOGLE_OAUTH_CLIENT_ID = 'os.getenv("GOOGLE_OAUTH_CLIENT_ID")'
+GOOGLE_OAUTH_CLIENT_SECRET = 'os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")'
+GOOGLE_OAUTH_CALLBACK_URL = 'http://localhost:8000'
+
+# django-allauth (social)
+# Authenticate if local account with this email address already exists
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+# Connect local account and social account if local account with that email address already exists
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APPS": [
+            {
+                "client_id": GOOGLE_OAUTH_CLIENT_ID,
+                "secret": GOOGLE_OAUTH_CLIENT_SECRET,
+                "key": "",
+            },
+        ],
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}

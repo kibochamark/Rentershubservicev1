@@ -42,7 +42,8 @@ urlpatterns = [
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
 
-    path('', SpectacularSwaggerView.as_view(url_name='schema'))
+    path('', SpectacularSwaggerView.as_view(url_name='schema')),
+path('api/login/', include('rest_social_auth.urls_jwt_pair')),
 
 
 ]
