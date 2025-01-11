@@ -2,16 +2,16 @@ from django.contrib.gis.db import models
 
 # Create your models here.
 class Property(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
+    title = models.CharField(max_length=255, default="")
+    description = models.TextField(default="")
     property_type = models.ForeignKey('PropertyType', on_delete=models.SET_NULL, null=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2)
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
     # Location Details
-    address = models.CharField(max_length=255)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
+    address = models.CharField(max_length=255, default=""),
+    city = models.CharField(max_length=100, default="")
+    state = models.CharField(max_length=100, default="")
+    country = models.CharField(max_length=100, default="")
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     location = models.PointField()
 
@@ -22,16 +22,16 @@ class Property(models.Model):
 
 
     # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
     # ADDITIONAL DATA
 
-    size = models.IntegerField()
-    bedrooms = models.IntegerField()
-    bathrooms = models.IntegerField()
-    parking_spaces = models.IntegerField()
+    size = models.IntegerField(default=0)
+    bedrooms = models.IntegerField(default=0)
+    bathrooms = models.IntegerField(default=0)
+    parking_spaces = models.IntegerField(default=0)
 
     # ... other fields ...
     is_available = models.BooleanField(default=True)
@@ -80,7 +80,7 @@ class SpaceType(models.Model):
     size_in_sqm = models.DecimalField(max_digits=6, decimal_places=2)
     num_bedrooms = models.PositiveIntegerField()
     num_bathrooms = models.PositiveIntegerField()
-    parking_spaces = models.PositiveIntegerField(Null=True , Blank=True)
+    parking_spaces = models.PositiveIntegerField()
     monthly_rent = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):

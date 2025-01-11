@@ -1,13 +1,6 @@
 from rest_framework import serializers
 
-from listing.models import Property, PropertyFeature, PropertyAmenity, SpaceType, Unit, UnitImage
-
-
-
-
-
-
-
+from listing.models import Property, PropertyFeature, PropertyAmenity, SpaceType, Unit, UnitImage, PropertyType
 
 
 class UnitImageSerializer(serializers.ModelSerializer):
@@ -38,6 +31,13 @@ class PropertyAmenitySerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyAmenity
         fields = ['id', 'name']
+
+
+class UnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Unit
+        fields=['pk', 'status', 'space_type', 'unit_number']
+        read_only=['space_type']
 
 
 class SpaceTypeSerializer(serializers.ModelSerializer):
