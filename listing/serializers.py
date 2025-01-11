@@ -36,7 +36,7 @@ class PropertyAmenitySerializer(serializers.ModelSerializer):
 class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model=Unit
-        fields=['pk', 'status', 'space_type', 'unit_number']
+        fields=['id', 'status', 'space_type', 'unit_number']
         read_only=['space_type']
 
 
