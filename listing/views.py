@@ -27,9 +27,7 @@ class PropertyGenericView(generics.ListCreateAPIView):
 
         if address:
             print(address)
-
             geo=geocoder.google('Mountain View, CA')
-            print(geo.json)
             lat=geo.latlng[0]
             lng=geo.latlng[1]
             point=f"Point({str(lng)} {str(lat)}"
