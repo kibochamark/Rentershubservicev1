@@ -1,11 +1,14 @@
 from http import HTTPStatus
 
 import geocoder
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
+from rest_framework.response import Response
 
-from listing.models import Property, PropertyType, PropertyAmenity
-from listing.serializers import PropertySerializer, PropertyTypeSerializer, PropertyAmenitySerializer
+from accounts.permissions import IsApprovedPermissions
+from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis
+from listing.serializers import PropertySerializer, PropertyTypeSerializer, PropertyAmenitySerializer, \
+    PropertyFeatureSerializer, TestSerializer
 
 
 # Create your views here.
@@ -36,8 +39,14 @@ class PropertyGenericView(generics.ListCreateAPIView):
 
 
 
+class TestGenericView(generics.ListCreateAPIView):
+    serializer_class = TestSerializer
+    queryset = TestGis.objects.all()
+    permission_classes = [permissions.AllowAny]
 
 
+
+#property type - get, post, delete and put apis
 
 class PropertyTypeGenericView(generics.ListCreateAPIView):
     queryset = PropertyType.objects.all()
@@ -59,7 +68,7 @@ class UpdatePropertyTypeGeneric(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-
+#property amenities- get, post, delete and put apis
 class PropertyAmmenityGenericView(generics.ListCreateAPIView):
     queryset = PropertyAmenity.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.DjangoModelPermissions]
@@ -72,6 +81,35 @@ class UpdatePropertyAmenityGeneric(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PropertyAmenitySerializer
 
     lookup_field = 'id'
+
+
+
+
+#property feature - get, post, delete and put apis
+class PropertyFeatureGenericView(generics.ListCreateAPIView):
+    """get and create property features"""
+    queryset = PropertyFeature.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.DjangoModelPermissions]
+    serializer_class = PropertyFeatureSerializer
+
+
+class UpdatePropertyFeatureGeneric(generics.RetrieveUpdateDestroyAPIView):
+    """update and delete property features"""
+    queryset = PropertyFeature.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.DjangoModelPermissions]
+    serializer_class = PropertyFeatureSerializer
+
+    lookup_field = 'id'
+
+
+
+
+#property apis
+class CreateListProperties(generics.ListCreateAPIView):
+    """get and create properties"""
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
 
 
 

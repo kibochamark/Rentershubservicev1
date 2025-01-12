@@ -39,6 +39,7 @@ if os.name == 'nt':
 
 
 # Replace the DATABASES section of your settings.py with this
+#tmpPostgres = urlparse(env('DATABASE_URL'))
 tmpPostgres = urlparse(os.environ.get('DATABASE_URL'))
 #
 DATABASES = {
@@ -62,6 +63,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
+#SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -177,6 +179,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     ],
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE':10
 
 }
 

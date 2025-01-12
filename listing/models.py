@@ -1,5 +1,8 @@
 from django.contrib.gis.db import models
 
+from accounts.models import RentersUser
+
+
 # Create your models here.
 class Property(models.Model):
     title = models.CharField(max_length=255, default="")
@@ -8,12 +11,13 @@ class Property(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
     # Location Details
-    address = models.CharField(max_length=255, default=""),
+
     city = models.CharField(max_length=100, default="")
     state = models.CharField(max_length=100, default="")
     country = models.CharField(max_length=100, default="")
     postal_code = models.CharField(max_length=20, blank=True, null=True)
-    location = models.PointField()
+    location = models.PointField(null=True, blank=True)
+    address = models.CharField(max_length=255, default="")
 
     # Features and Amenities
     features = models.ManyToManyField('PropertyFeature', blank=True)
@@ -35,6 +39,7 @@ class Property(models.Model):
 
     # ... other fields ...
     is_available = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=True)
     featured = models.BooleanField(default=False)
     rent_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
@@ -42,6 +47,10 @@ class Property(models.Model):
     # Image storage
     main_image_url = models.JSONField(blank=True, null=True)  # URL of the featured image
     images = models.JSONField(default=list)  # List of image objects (ID + URL)
+
+    posted_by=models.ForeignKey(RentersUser, on_delete=models.SET_NULL, null=True, blank=True)
+    managed_by = models.CharField(max_length=255, null=True, blank=True, default="")
+
 
     def __str__(self):
             return self.title
@@ -106,3 +115,19 @@ class UnitImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.unit}"
+
+
+
+
+class TestGis(models.Model):
+    location= models.PointField()
+    address=models.CharField(max_length=255, default="")
+
+
+    def __str__(self):
+        return self.location
+
+
+
+
+

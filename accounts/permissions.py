@@ -1,7 +1,7 @@
 # custom permissions
 from rest_framework import permissions
 
-class IsStaffEditorPermissions(permissions.DjangoModelPermissions):
+class IsApprovedPermissions(permissions.DjangoModelPermissions):
     # Map methods into required permission codes.
     # Override this if you need to also provide 'view' permissions,
     # or if you want to provide custom permission codes.
@@ -17,9 +17,10 @@ class IsStaffEditorPermissions(permissions.DjangoModelPermissions):
 
     def has_permission(self, request, view):
         user= request.user
-        if user.is_staff:
-            # use perm -> app_name.verbname
-            # if user.hasperm(accounts.view_account)
-            return True
-        return  True
+        print(request.user.is_authenticated)
+        if request.user.is_authenticated:
+            if user.approval_status == "APPROVED":
+                return True
+
+        return  False
 
