@@ -2,6 +2,7 @@ import random
 
 # otp using pyotp
 import pyotp
+import os
 
 
 
@@ -21,14 +22,14 @@ def send_otp(mobile, otp):
 
 def generate_otp(duration=300):
     # Create a secret key (keep it secret!)̥
-    secret_key = pyotp.random_base32()
+    # secret_key = pyotp.random_base32()
 
-    otp = pyotp.TOTP(secret_key, interval=duration)
+    otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=duration)
     # Generate an OTP using TOTP after every 30 seconds
     print("Your TOTP is: ", otp.now())
 
 
-    return (otp.now(), secret_key)
+    return otp.now()
 
 
 
