@@ -32,6 +32,7 @@ from urllib.parse import urljoin
 
 import requests
 from django.urls import reverse
+import os
 
 
 
@@ -458,30 +459,30 @@ class OtpViewset(viewsets.ViewSet):
             print(contact)
 
 
-            otp, secret_key=generate_otp()
+            otp=generate_otp()
 
-            # # add secret to otp
-            #
-            obj = Otp.objects.filter(secret=secret_key).first()
-            #
-            #
-            # print(obj, "non")
+            # # # add secret to otp
+            # #
+            # obj = Otp.objects.filter(secret=secret_key).first()
+            # #
+            # #
+            # # print(obj, "non")
 
 
-            if obj is not None:
-                serializer = OtpSerializer(obj, data={
-                    "secret":secret_key
-                },  partial=True)
-                if serializer.is_valid(raise_exception=True):
-                    serializer.save()
-            else:
+            # if obj is not None:
+            #     serializer = OtpSerializer(obj, data={
+            #         "secret":secret_key
+            #     },  partial=True)
+            #     if serializer.is_valid(raise_exception=True):
+            #         serializer.save()
+            # else:
 
-                serializer = OtpSerializer(data={
-                    "secret": secret_key
-                })
-                print(serializer.is_valid())
-                if serializer.is_valid(raise_exception=True):
-                    serializer.save()
+            #     serializer = OtpSerializer(data={
+            #         "secret": secret_key
+            #     })
+            #     print(serializer.is_valid())
+            #     if serializer.is_valid(raise_exception=True):
+            #         serializer.save()
 
 
 
@@ -583,7 +584,7 @@ class OtpViewset(viewsets.ViewSet):
 
             # print(obj.otp_secret)
 
-            if not verify_otp(int(user_otp), secret_key=obj.secret):
+            if not verify_otp(int(user_otp), secret_key=os.environ.get("otp_secret")):
                 return Response({
                     "error": "invalid otp"
                 }, status=HTTPStatus.BAD_REQUEST)
