@@ -48,7 +48,7 @@ class SpaceTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SpaceType
-        fields = ['id', 'name', 'size_in_sqm', 'num_bedrooms', 'num_bathrooms', 'parking_spaces', 'monthly_rent', 'units']
+        fields = ['id', 'name', 'property',  'size_in_sqm', 'num_bedrooms', 'num_bathrooms', 'parking_spaces', 'monthly_rent', 'deposit_amount', 'units']
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -61,6 +61,7 @@ class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields =[
+            'id',
             'title',
             'description',
             'property_type',
@@ -85,6 +86,8 @@ class PropertySerializer(serializers.ModelSerializer):
             'images',
             'features',
             'amenities',
+            'water_charges',
+            'garbage_charges',
             'posted_by',
             'managed_by',
             'space_types'
@@ -95,53 +98,11 @@ class PropertySerializer(serializers.ModelSerializer):
 
 
 
-        def create(self, validated_data):
-            address= validated_data.pop("address")
-            location = validated_data.pop("location")
-            features = validated_data.po("features")
-            amenities = validated_data.pop("amenities")
-            posted_by= validated_data.pop("posted_by")
-
-            feature_set=[]
-            amenities_set=[]
-
-            if not isinstance(features, list) or not isinstance(amenities, list):
-                raise ValidationError("features/amenities should be a list")
-
-            for f in features:
-                feat= get_object_or_404(PropertyFeature, id=f)
-                if feat:
-                    feature_set.append(feat)
-
-            for a in amenities:
-                amen=get_object_or_404(PropertyAmenity, id=a)
-                if amen:
-                    amenities_set.append(amen)
-
-            location="Point(-133.72 36)"
-
-
-            return Property.objects.create(location=location, posted_by=self.context.get("request").user, amenities=amenities, features=features, **validated_data)
 
 
 
 
 
-class TestSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=TestGis
-        fields=["location",
-                "address"]
-
-
-        read_only_fields=["location"]
 
 
 
-    def create(self, validated_data):
-        address= validated_data.pop("address")
-        print(address)
-
-        location="Point(-132.24 46)"
-
-        return TestGis.objects.create(location=location,**validated_data)

@@ -36,6 +36,8 @@ class Property(models.Model):
     bedrooms = models.IntegerField(default=0)
     bathrooms = models.IntegerField(default=0)
     parking_spaces = models.IntegerField(default=0)
+    water_charges = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
+    garbage_charges = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
 
     # ... other fields ...
     is_available = models.BooleanField(default=True)
@@ -91,6 +93,7 @@ class SpaceType(models.Model):
     num_bathrooms = models.PositiveIntegerField()
     parking_spaces = models.PositiveIntegerField()
     monthly_rent = models.DecimalField(max_digits=10, decimal_places=2)
+    deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return f"{self.name} - {self.property.title}"
