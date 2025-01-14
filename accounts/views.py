@@ -98,7 +98,7 @@ class AccountsViewSet(viewsets.ViewSet):
         """
         if self.action == 'list' or self.action == 'retrieve':
             permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-        elif self.action == "loginuser":
+        elif self.action == "loginuser" or self.action == 'create' :
             print(self.action)
             permission_classes = [permissions.AllowAny]
         else:
