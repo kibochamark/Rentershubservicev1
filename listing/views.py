@@ -55,6 +55,8 @@ class PropertyTypeGenericView(generics.ListCreateAPIView):
 
 
 
+
+
 class UpdatePropertyTypeGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = PropertyType.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.DjangoModelPermissions]
@@ -88,6 +90,15 @@ class PropertyFeatureGenericView(generics.ListCreateAPIView):
     queryset = PropertyFeature.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.DjangoModelPermissions]
     serializer_class = PropertyFeatureSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        propertytype = self.request.GET.get("propertytype")
+        qs = self.queryset
+        if propertytype:
+            qs=qs.filter(propertytype=int(propertytype)).all().order_by('name', "-id")
+            print(qs)
+
+        return qs
 
 
 class UpdatePropertyFeatureGeneric(generics.RetrieveUpdateDestroyAPIView):

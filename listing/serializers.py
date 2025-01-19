@@ -17,7 +17,7 @@ class PropertyTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PropertyType
-        fields = ['id', 'name']
+        fields = ['id', 'name', ]
 
 
 
@@ -25,7 +25,7 @@ class PropertyFeatureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PropertyFeature
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'propertytype']
 
 
 
