@@ -38,6 +38,9 @@ class Property(models.Model):
     parking_spaces = models.IntegerField(default=0)
     water_charges = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
     garbage_charges = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
+    security_charges = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
+    other_charges = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
+    water_deposit = models.DecimalField(decimal_places=2 , max_digits=12, default=0.00)
 
     # ... other fields ...
     is_available = models.BooleanField(default=True)
