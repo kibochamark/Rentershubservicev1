@@ -4,6 +4,8 @@ import random
 import pyotp
 import os
 
+import requests
+from django.conf import settings
 
 
 def send_otp(mobile, otp):
@@ -17,6 +19,26 @@ def send_otp(mobile, otp):
      # print(response.content)
      # return bool(response.ok)
  pass
+
+
+def get_geocode(address):
+
+    try:
+
+        url = "https://geocode.maps.co/search"
+        # url = f"https://2factor.in/API/V1/{settings.SMS_API_KEY}/SMS/{mobile}/{otp}/Your OTP is"
+        payload = {
+            'q':address,
+            'api_key':settings.GEOCODE_API_KEY
+        }
+        # headers = {'content-type': 'application/x-www-form-urlencoded'}
+        response = requests.get(url, params=payload)
+        data= response.json()
+        print(data)
+        return (response.status_code, data[1])
+        # return bool(response.ok)
+    except Exception as e:
+        return (400, e)
 
 
 

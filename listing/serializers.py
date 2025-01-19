@@ -87,7 +87,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'features',
             'amenities',
             'water_charges',
-            'water_deposit'
+            'water_deposit',
             'garbage_charges',
             'security_charges',
             'other_charges',

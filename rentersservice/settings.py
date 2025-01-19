@@ -311,3 +311,8 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+
+
+
+#GEOCODE_API_KEY=env("GEOCODE_API_KEY")
+GEOCODE_API_KEY=os.environ.get('GEOCODE_API_KEY')

@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from accounts.permissions import IsApprovedPermissions
+from accounts.util import get_geocode
 from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis, SpaceType, Unit
 from listing.serializers import PropertySerializer, PropertyTypeSerializer, PropertyAmenitySerializer, \
     PropertyFeatureSerializer, SpaceTypeSerializer, UnitSerializer
@@ -130,6 +131,17 @@ class CreateListProperties(generics.ListCreateAPIView):
 
         print(address, features, amenities, posted_by)
 
+        #get geocode from address
+
+        generated_location="Point(-133.72 36)"
+        status, data= get_geocode(address)
+
+        #print(generated_location, status, data)
+
+        if status == 200:
+            generated_location = f"Point({data['lon']} {data['lat']})"
+
+
         feature_set = []
         amenities_set = []
 
@@ -146,10 +158,10 @@ class CreateListProperties(generics.ListCreateAPIView):
             if amen:
                 amenities_set.append(amen)
 
-        location = "Point(-133.72 36)"
 
 
-        return serializer.save(location=location, features=feature_set, amenities=amenities_set, posted_by=self.request.user)
+
+        return serializer.save(location=generated_location, features=feature_set, amenities=amenities_set, posted_by=self.request.user)
 
 
 
