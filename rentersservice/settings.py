@@ -133,7 +133,8 @@ ROOT_URLCONF = 'rentersservice.urls'
 # CORS_URLS_REGEX= r"^/api/.*"
 CORS_ALLOWED_ORIGINS=[
     'http://localhost:3000',
-    'http://localhost:8000'
+    'http://localhost:8000'.
+    'https://renters-hub-front.vercel.app'
 
 ]
 
