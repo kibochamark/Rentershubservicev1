@@ -23,6 +23,8 @@ class PropertyGenericView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
 
 
+    
+
 
 
     def perform_create(self, serializer):
@@ -52,6 +54,12 @@ class PropertyTypeGenericView(generics.ListCreateAPIView):
     serializer_class = PropertyTypeSerializer
 
     lookup_field = 'id'
+
+
+    def get_queryset(self, *args, **kwargs):
+        qs = self.queryset.order_by('name')
+
+        return qs
 
 
 
