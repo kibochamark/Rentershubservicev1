@@ -117,7 +117,7 @@ class AccountsViewSet(viewsets.ViewSet):
 
             obj =get_object_or_404(self.queryset, contact = contact)
 
-            print(obj.username)
+            #print(obj.username)
 
             if not obj:
                 return Response({
@@ -130,17 +130,17 @@ class AccountsViewSet(viewsets.ViewSet):
                 }, status=HTTPStatus.BAD_REQUEST)
 
 
-            print(obj.approval_status)
+            #print(obj.approval_status)
 
             if obj.approval_status != "APPROVED":
                 return Response({
                     "error": "Please wait to be approved by admin"
                 }, status=HTTPStatus.BAD_REQUEST)
 
-            print(obj.email, password)
+            #print(obj.email, password)
 
             user = authenticate(request, username=obj.email, password=password)
-            print(user)
+            #print(user)
 
             if not user:
                 return Response({
@@ -152,10 +152,13 @@ class AccountsViewSet(viewsets.ViewSet):
             tokens =get_tokens_for_user(obj)
 
 
-            print(tokens)
+            #print(tokens)
 
             return Response({
-                "result":tokens
+                "result":{
+                    "tokens":tokens,
+                    "user_id":obj.id
+                }
             }, status=HTTPStatus.OK)
 
 
