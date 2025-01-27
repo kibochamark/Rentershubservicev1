@@ -23,6 +23,7 @@ class AccountSerializer(serializers.ModelSerializer):
         fields=[
             'pk',
             'first_name',
+            'last_name',
             'email',
             'contact',
             'role_name',
