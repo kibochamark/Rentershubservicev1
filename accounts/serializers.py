@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
-from django.contrib.auth.hashers import make_passwor
+from django.contrib.auth.hashers import make_password
 
 
 from accounts.models import RentersUser, RentersRole, Otp
