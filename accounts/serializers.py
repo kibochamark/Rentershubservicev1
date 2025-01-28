@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
+from django.contrib.auth.hashers import make_passwor
 
 
 from accounts.models import RentersUser, RentersRole, Otp
@@ -44,11 +45,9 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-
-
     class Meta:
-        model=RentersUser
-        fields=[
+        model = RentersUser
+        fields = [
             'email',
             'password',
             'first_name',
@@ -57,6 +56,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             'contact',
             'username'
         ]
+        extra_kwargs = {
+            'password': {'write_only': True}  # Ensures the password is write-only
+        }
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])  # Hash the password
+        return super().create(validated_data)
+
 
 
 
