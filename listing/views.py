@@ -30,7 +30,7 @@ class PropertyGenericView(generics.ListCreateAPIView):
         if userid:
             user = get_object_or_404(RentersUser, id=int(userid))
             if user:
-                qs = qs.filter(user=user.id).all().order_by('name', "-id")
+                qs = qs.filter(posted_by=user.id).all().order_by('name', "-id")
         return qs
 
 
