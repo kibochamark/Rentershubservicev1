@@ -6,6 +6,7 @@ from rest_framework import generics, permissions
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from accounts.models import RentersUser
 from accounts.permissions import IsApprovedPermissions
 from accounts.util import get_geocode
 from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis, SpaceType, Unit
@@ -21,6 +22,16 @@ class PropertyGenericView(generics.ListCreateAPIView):
     serializer_class = PropertySerializer
     queryset = Property.objects.all()
     permission_classes = [permissions.AllowAny]
+
+
+    def get_queryset(self, *args, **kwargs):
+        userid = self.request.GET.get("userid")
+        qs = self.queryset
+        if userid:
+            user = get_object_or_404(RentersUser, id=int(userid))
+            if user:
+                qs = qs.filter(user=user.id).all().order_by('name', "-id")
+        return qs
 
 
     
