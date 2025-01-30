@@ -93,7 +93,8 @@ class PropertySerializer(serializers.ModelSerializer):
             'other_charges',
             'posted_by',
             'managed_by',
-            'space_types'
+            'space_types',
+            'updated_at'
         ]
 
         read_only_fields = ['location', 'is_approved', 'is_available']
