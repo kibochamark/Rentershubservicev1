@@ -142,7 +142,7 @@ class CreateListProperties(generics.ListCreateAPIView):
 
     def get_queryset(self, *args, **kwargs):
         userid = self.request.GET.get("userid")
-        qs = self.queryset
+        qs = self.queryset.order_by('updatedAt')
         print(userid)
         if userid:
             newqs = qs.filter(posted_by=int(userid)).all().order_by('title', "-id")
