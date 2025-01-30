@@ -28,9 +28,7 @@ class PropertyGenericView(generics.ListCreateAPIView):
         userid = self.request.GET.get("userid")
         qs = self.queryset
         if userid:
-            user = get_object_or_404(RentersUser, id=int(userid))
-            if user:
-                qs = qs.filter(posted_by=user.id).all().order_by('name', "-id")
+            qs = qs.filter(posted_by=userid).all().order_by('title', "-id")
         return qs
 
 
