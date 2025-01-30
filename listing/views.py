@@ -27,8 +27,11 @@ class PropertyGenericView(generics.ListCreateAPIView):
     def get_queryset(self, *args, **kwargs):
         userid = self.request.GET.get("userid")
         qs = self.queryset
+        print(userid)
         if userid:
-            qs = qs.filter(posted_by=userid).all().order_by('title', "-id")
+            newqs = qs.filter(posted_by=int(userid)).all().order_by('title', "-id")
+            print(qs)
+            return newqs
         return qs
 
 
