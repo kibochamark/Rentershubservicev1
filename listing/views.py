@@ -140,6 +140,16 @@ class CreateListProperties(generics.ListCreateAPIView):
     serializer_class = PropertySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
 
+    def get_queryset(self, *args, **kwargs):
+        userid = self.request.GET.get("userid")
+        qs = self.queryset
+        print(userid)
+        if userid:
+            newqs = qs.filter(posted_by=int(userid)).all().order_by('title', "-id")
+            print(qs)
+            return newqs
+        return qs
+
 
     def perform_create(self, serializer):
         address = serializer.initial_data["address"]
