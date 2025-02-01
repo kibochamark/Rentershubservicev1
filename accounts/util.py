@@ -25,16 +25,18 @@ def get_geocode(address):
 
     try:
 
-        url = "https://geocode.maps.co/search"
+        url = "https://geocode.maps.co/search?q=" + address + '&api_key=678cc252cc7ac937948876azgd2c1a4'
+        print(url)
         # url = f"https://2factor.in/API/V1/{settings.SMS_API_KEY}/SMS/{mobile}/{otp}/Your OTP is"
         payload = {
             'q':address,
             'api_key':settings.GEOCODE_API_KEY
         }
         # headers = {'content-type': 'application/x-www-form-urlencoded'}
-        response = requests.get(url, params=payload)
+        response = requests.get(url)
+        print(response)
         data= response.json()
-        print(data)
+        print(data, "gr")
         return (response.status_code, data[1])
         # return bool(response.ok)
     except Exception as e:

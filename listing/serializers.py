@@ -54,7 +54,7 @@ class SpaceTypeSerializer(serializers.ModelSerializer):
 class PropertySerializer(serializers.ModelSerializer):
     space_types = SpaceTypeSerializer(many=True, read_only=True)
 
-    #address= serializers.CharField(write_only=True)
+    distance= serializers.DecimalField(read_only=True, source='distance.mi', max_digits=10, decimal_places=2, required=False)
 
 
 
@@ -62,6 +62,7 @@ class PropertySerializer(serializers.ModelSerializer):
         model = Property
         fields =[
             'id',
+            'distance',
             'title',
             'description',
             'property_type',

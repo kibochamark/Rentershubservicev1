@@ -1,6 +1,9 @@
 from http import HTTPStatus
 
+import django_filters.rest_framework
 import geocoder
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.geos import GEOSGeometry
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
 from rest_framework.exceptions import ValidationError
@@ -9,6 +12,7 @@ from rest_framework.response import Response
 from accounts.models import RentersUser
 from accounts.permissions import IsApprovedPermissions
 from accounts.util import get_geocode
+from listing.filterset import PropertyFilter
 from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis, SpaceType, Unit
 from listing.serializers import PropertySerializer, PropertyTypeSerializer, PropertyAmenitySerializer, \
     PropertyFeatureSerializer, SpaceTypeSerializer, UnitSerializer
@@ -138,15 +142,34 @@ class CreateListProperties(generics.ListCreateAPIView):
     """get and create properties"""
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
+
+    #filterset_fields=('title')
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
+    #filter_backends = []
+    filterset_class =PropertyFilter
+
 
     def get_queryset(self, *args, **kwargs):
-        userid = self.request.GET.get("userid")
-        qs = self.queryset
-        print(userid)
+        userid = self.request.query_params.get("userid", None)
+
+        #get lang and long variables
+        latitude = self.request.query_params.get("lat", None)
+        longitude= self.request.query_params.get('long', None)
+
+
+
+        qs = super().get_queryset()
+
+        if latitude and longitude:
+            pnt= GEOSGeometry('POINT(' + longitude + ' ' + latitude + ')', srid=4326)
+            print(pnt)
+            matching_query=qs.annotate(distance=Distance('location', pnt)).order_by('distance')
+
+            if matching_query.exists():
+                qs = matching_query
+
         if userid:
             newqs = qs.filter(posted_by=int(userid)).all().order_by('title', "-id")
-            print(qs)
             return newqs
         return qs
 
@@ -163,13 +186,14 @@ class CreateListProperties(generics.ListCreateAPIView):
 
         #get geocode from address
 
-        generated_location="Point(-133.72 36)"
+        generated_location=None
         status, data= get_geocode(address)
 
-        #print(generated_location, status, data)
+        print(generated_location, status, data)
 
         if status == 200:
-            generated_location = f"Point({data['lon']} {data['lat']})"
+            pnt= GEOSGeometry('POINT(' + data['lon'] + ' ' + data['lat'] + ')')
+            generated_location = pnt
 
 
         feature_set = []

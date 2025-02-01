@@ -39,8 +39,8 @@ if os.name == 'nt':
 
 
 # Replace the DATABASES section of your settings.py with this
-#tmpPostgres = urlparse(env('DATABASE_URL'))
-tmpPostgres = urlparse(os.environ.get('DATABASE_URL'))
+tmpPostgres = urlparse(env('DATABASE_URL'))
+#tmpPostgres = urlparse(os.environ.get('DATABASE_URL'))
 #
 DATABASES = {
     'default': {
@@ -62,8 +62,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
-#SECRET_KEY = env('SECRET_KEY')
+#SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -91,6 +91,7 @@ INSTALLED_APPS = [
 
         'django.contrib.sites',
 
+'django_filters',
 
 
     'allauth',
@@ -181,6 +182,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication'
     ],
     'DEFAULT_SCHEMA_CLASS':'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS':['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE':20
 
@@ -315,5 +317,5 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 
-#GEOCODE_API_KEY=env("GEOCODE_API_KEY")
-GEOCODE_API_KEY=os.environ.get('GEOCODE_API_KEY')
+GEOCODE_API_KEY=env("GEOCODE_API_KEY")
+#GEOCODE_API_KEY=os.environ.get('GEOCODE_API_KEY')
