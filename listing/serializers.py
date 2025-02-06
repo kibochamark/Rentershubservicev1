@@ -106,7 +106,7 @@ class PropertySerializer(serializers.ModelSerializer):
         read_only_fields = ['location', 'is_approved', 'is_available', 'updated_at']
 
 
-        def get_location_coords(self, obj):
+    def get_location_coords(self, obj):
             if obj and obj.location:
                 coords = obj.location.coords
                 return coords
