@@ -56,6 +56,8 @@ class PropertySerializer(serializers.ModelSerializer):
 
     distance= serializers.DecimalField(read_only=True, source='distance.mi', max_digits=10, decimal_places=2, required=False)
     propertytype=PropertyTypeSerializer(source="property_type", read_only=True)
+    location_coords = serializers.SerializerMethodField()  # ✅ Link the method
+
 
 
 
@@ -75,6 +77,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'postal_code',
             'address',
             'location',
+            'location_coords',
             'postal_code',
             'size',
             'bedrooms',
@@ -101,6 +104,14 @@ class PropertySerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = ['location', 'is_approved', 'is_available', 'updated_at']
+
+
+        def get_location_coords(self, obj):
+            if obj and obj.location:
+                coords = obj.location.coords
+                return coords
+            return null
+        
 
 
 
