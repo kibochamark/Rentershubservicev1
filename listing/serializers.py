@@ -55,6 +55,7 @@ class PropertySerializer(serializers.ModelSerializer):
     space_types = SpaceTypeSerializer(many=True, read_only=True)
 
     distance= serializers.DecimalField(read_only=True, source='distance.mi', max_digits=10, decimal_places=2, required=False)
+    propertytype=PropertyTypeSerializer(source="property_type", read_only=True)
 
 
 
@@ -66,6 +67,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'title',
             'description',
             'property_type',
+            'propertytype',
             'price',
             'city',
             'state',
