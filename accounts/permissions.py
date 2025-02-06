@@ -16,6 +16,8 @@ class IsApprovedPermissions(permissions.DjangoModelPermissions):
     }
 
     def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
         user= request.user
         print(request.user.is_authenticated)
         if request.user.is_authenticated:
