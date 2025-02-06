@@ -56,7 +56,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
     distance= serializers.DecimalField(read_only=True, source='distance.mi', max_digits=10, decimal_places=2, required=False)
     propertytype=PropertyTypeSerializer(source="property_type", read_only=True)
-    location_coords = serializers.SerializerMethodField()  # ✅ Link the method
+    location_coords = serializers.SerializerMethodField(read_only=True)  # ✅ Link the method
 
 
 
@@ -110,7 +110,7 @@ class PropertySerializer(serializers.ModelSerializer):
             if obj and obj.location:
                 coords = obj.location.coords
                 return coords
-            return null
+            return ""
         
 
 
