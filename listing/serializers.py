@@ -57,7 +57,7 @@ class PropertySerializer(serializers.ModelSerializer):
     distance= serializers.DecimalField(read_only=True, source='distance.mi', max_digits=10, decimal_places=2, required=False)
     propertytype=PropertyTypeSerializer(source="property_type", read_only=True)
     location_coords = serializers.SerializerMethodField(read_only=True)  # ✅ Link the method
-    property_features=PropertyFeatureSerializer(many=True, read_only=True, source=features)
+    property_features=PropertyFeatureSerializer(many=True, read_only=True, source="features")
 
 
 
