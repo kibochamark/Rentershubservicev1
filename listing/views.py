@@ -182,17 +182,17 @@ class CreateListProperties(generics.ListCreateAPIView):
 
 
 
-        print(address, features, amenities, posted_by)
+        # print(address, features, amenities, posted_by)
 
         #get geocode from address
 
         generated_location=None
         status, data= get_geocode(address)
 
-        print(generated_location, status, data)
+        # print(generated_location, status, data)
 
         if status == 200:
-            pnt= GEOSGeometry('POINT(' + data['lon'] + ' ' + data['lat'] + ')')
+            pnt= GEOSGeometry('POINT(' + str(data['lon']) + ' ' + str(data['lat']) + ')')
             generated_location = pnt
 
 

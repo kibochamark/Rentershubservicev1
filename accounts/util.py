@@ -1,5 +1,6 @@
 import random
 
+import geocoder
 # otp using pyotp
 import pyotp
 import os
@@ -22,24 +23,17 @@ def send_otp(mobile, otp):
 
 
 def get_geocode(address):
-
     try:
 
-        url = "https://geocode.maps.co/search?q=" + address + '&api_key=678cc252cc7ac937948876azgd2c1a4'
-        print(url)
-        # url = f"https://2factor.in/API/V1/{settings.SMS_API_KEY}/SMS/{mobile}/{otp}/Your OTP is"
-        payload = {
-            'q':address,
-            'api_key':settings.GEOCODE_API_KEY
-        }
-        # headers = {'content-type': 'application/x-www-form-urlencoded'}
-        response = requests.get(url)
-        print(response)
-        data= response.json()
-        print(data, "gr")
-        return (response.status_code, data[1])
+        geo = geocoder.google(address ,key=settings.GOOGLE_API_KEY)
+        print(geo, "geo")
+        return (geo.status_code, {
+            "lat" : geo.latlng[0],
+            "lon" : geo.latlng[1]
+        })
         # return bool(response.ok)
     except Exception as e:
+        print(e)
         return (400, e)
 
 

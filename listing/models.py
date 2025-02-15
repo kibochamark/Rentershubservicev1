@@ -1,6 +1,15 @@
 from django.contrib.gis.db import models
 
 from accounts.models import RentersUser
+from django.core.exceptions import  ValidationError
+
+
+def check_phone(value):
+    if value:
+        if len(value) != 10:
+            raise ValidationError("Contact should be exactly 10 numbers with no countrycode")
+        else:
+            return value
 
 
 # Create your models here.
@@ -54,11 +63,13 @@ class Property(models.Model):
     images = models.JSONField(default=list)  # List of image objects (ID + URL)
 
     posted_by=models.ForeignKey(RentersUser, on_delete=models.SET_NULL, null=True, blank=True)
-    managed_by = models.CharField(max_length=255, null=True, blank=True, default="")
 
+    managed_by = models.CharField(max_length=255, null=True, blank=True, default="")
+    owners_contact = models.CharField(max_length=255, null=True, blank=True, default="", validators=[check_phone])
 
     def __str__(self):
             return self.title
+
 
 
 

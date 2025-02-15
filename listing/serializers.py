@@ -100,6 +100,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'security_charges',
             'other_charges',
             'posted_by',
+            'owners_contact',
             'managed_by',
             'space_types',
             'updated_at'
