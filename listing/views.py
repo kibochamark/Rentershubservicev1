@@ -153,20 +153,23 @@ class CreateListProperties(generics.ListCreateAPIView):
         userid = self.request.query_params.get("userid", None)
 
         #get lang and long variables
-        latitude = self.request.query_params.get("lat", None)
-        longitude= self.request.query_params.get('long', None)
+        address = self.request.query_params.get("address", None)
 
 
-
+    
         qs = super().get_queryset()
 
-        if latitude and longitude:
-            pnt= GEOSGeometry('POINT(' + longitude + ' ' + latitude + ')', srid=4326)
-            print(pnt)
-            matching_query=qs.annotate(distance=Distance('location', pnt)).order_by('distance')
+        if address:
+            status, data= get_geocode(address)
 
-            if matching_query.exists():
-                qs = matching_query
+            # print(generated_location, status, data)
+    
+            if status == 200:
+                pnt= GEOSGeometry('POINT(' + str(data['lon']) + ' ' + str(data['lat']) + ')', srid=4326)
+                matching_query=qs.annotate(distance=Distance('location', pnt)).order_by('distance')
+    
+                if matching_query.exists():
+                    qs = matching_query
 
         if userid:
             newqs = qs.filter(posted_by=int(userid)).all().order_by('title', "-id")
