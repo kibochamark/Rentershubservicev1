@@ -66,7 +66,7 @@ class PropertyGenericView(generics.ListCreateAPIView):
 
 class PropertyTypeGenericView(generics.ListCreateAPIView):
     queryset = PropertyType.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, permissions.DjangoModelPermissions]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = PropertyTypeSerializer
 
     lookup_field = 'id'
