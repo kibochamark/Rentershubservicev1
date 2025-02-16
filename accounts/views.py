@@ -466,7 +466,7 @@ class OtpViewset(viewsets.ViewSet):
 
             # # # add secret to otp
             # #
-            # obj = Otp.objects.filter(secret=secret_key).first()
+            #obj = Otp.objects.filter(secret=secret_key).first()
             # #
             # #
             # # print(obj, "non")
@@ -490,7 +490,7 @@ class OtpViewset(viewsets.ViewSet):
 
 
             # print(otp, secret_key)
-            # send_otp(mobile=contact, otp=otpcode)
+            send_otp(mobile=contact, otp=otpcode)
 
 
             return Response({
