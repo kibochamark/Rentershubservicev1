@@ -71,6 +71,21 @@ class PropertyTypeGenericView(generics.ListCreateAPIView):
 
     lookup_field = 'id'
 
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+
+        print(self.action)
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [permissions.AllowAny]
+        elif self.action == 'create' :
+            print(self.action)
+            permission_classes = [permissions.AllowAny]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
 
     def get_queryset(self, *args, **kwargs):
         qs = self.queryset.order_by('name')
