@@ -490,7 +490,7 @@ class OtpViewset(viewsets.ViewSet):
 
 
             # print(otp, secret_key)
-            send_otp(mobile=contact, otp=otpcode)
+            send_otp(mobile=contact, otp=otp)
 
 
             return Response({
@@ -578,16 +578,11 @@ class OtpViewset(viewsets.ViewSet):
                     "error": "Missing required fields"
                 }, status=HTTPStatus.BAD_REQUEST)
 
-            obj = Otp.objects.first()
-
-            if not obj:
-                return Response({
-                    "error": "secret does not exist"
-                }, status=HTTPStatus.BAD_REQUEST)
+          
 
             # print(obj.otp_secret)
 
-            if not verify_otp(int(user_otp), secret_key=os.environ.get("otp_secret")):
+            if not verify_otp(int(user_otp)):
                 return Response({
                     "error": "invalid otp"
                 }, status=HTTPStatus.BAD_REQUEST)
