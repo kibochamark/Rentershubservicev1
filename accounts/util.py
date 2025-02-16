@@ -53,8 +53,8 @@ def generate_otp(duration=300):
 
 
 
-def verify_otp(user_otp, secret_key, duration=300):
-    otp = pyotp.TOTP(secret_key, interval=duration)
+def verify_otp(user_otp,  duration=300):
+    otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=duration)
 
     if otp.verify(user_otp):
         return  True
