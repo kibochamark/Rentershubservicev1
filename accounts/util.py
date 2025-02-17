@@ -10,15 +10,22 @@ from django.conf import settings
 
 
 def send_otp(mobile, otp):
- """
- Send OTP via SMS.
- """
- url = f"https://2factor.in/API/V1/{settings.SMS_API_KEY}/SMS/{mobile}/{otp}/Your OTP is"
- payload = ""
- headers = {'content-type': 'application/x-www-form-urlencoded'}
- response = requests.get(url, data=payload, headers=headers)
- print(response.content)
- return bool(response.ok)
+    """
+    Send OTP via SMS.
+    """
+    url = "https://quicksms.advantasms.com/api/services/sendsms/"
+    payload = {
+        "apikey": settings.SMS_API_KEY,
+        "partnerID": "4283",
+        "message": f"Your OTP is {otp}",
+        "shortcode": "RENTERS_HUB",
+        "mobile": mobile
+    }
+    headers = {'content-type': 'application/json'}
+
+    response = requests.post(url, json=payload, headers=headers)
+    print(response.content)
+    return response.ok
 
 
 
