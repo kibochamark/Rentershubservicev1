@@ -92,6 +92,9 @@ import os
 class AccountsViewSet(viewsets.ViewSet):
     queryset=RentersUser.objects.all()
 
+
+  
+
     def get_permissions(self):
         """
         Instantiates and returns the list of permissions that this view requires.
@@ -172,11 +175,17 @@ class AccountsViewSet(viewsets.ViewSet):
 
 
     @extend_schema(responses=AccountSerializer)
-    def list(self, request):
+    def list(self, request, status:str=None):
         """
-        Get all users
+        Get all users   
         """
-        queryset = RentersUser.objects.all()
+        queryset = RentersUser.objects
+        status = request.query_params.get("status")
+        if status:
+            queryset= queryset.filter(approval_status=status.lower().upper()).all()
+        else:
+            queryset=queryset.all()
+        
 
         data=AccountSerializer(queryset, many=True, context={'request': request}).data
         return Response({

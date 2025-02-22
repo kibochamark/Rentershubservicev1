@@ -75,7 +75,8 @@ class PropertyTypeGenericView(generics.ListCreateAPIView):
 
 
     def get_queryset(self, *args, **kwargs):
-        qs = self.queryset.order_by('name')
+        qs = self.queryset.order_by('id')
+        print(qs)
 
         return qs
 

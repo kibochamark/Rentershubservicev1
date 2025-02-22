@@ -99,11 +99,17 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'approval_status'
         ]
-        extra_kwargs = {
-            'password': {'write_only': True}  # Ensures the password is write-only
-        }
+       
 
-    def update(self, validated_data):
-        validated_data['password'] = make_password(validated_data['password'])  # Hash the password
-        return super().create(validated_data)
+    def update(self, instance , validated_data):
+        password= validated_data.get("password")
+        if password:
+            validated_data.pop('password')
+            instance.password =make_password(password)
+        
+        # instance(**validated_data)
+        instance.save()
+       
+       
+        return instance
 
