@@ -86,4 +86,24 @@ class OtpSerializer(serializers.ModelSerializer):
             fields=[
                 'secret'
             ]
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RentersUser
+        fields = [
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+            'role',
+            'contact',
+            'username',
+            'status'
+        ]
+        extra_kwargs = {
+            'password': {'write_only': True}  # Ensures the password is write-only
+        }
+
+    def update(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])  # Hash the password
+        return super().create(validated_data)
 
