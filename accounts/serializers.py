@@ -97,7 +97,7 @@ class UserSerializer(serializers.ModelSerializer):
             'role',
             'contact',
             'username',
-            'status'
+            'approval_status'
         ]
         extra_kwargs = {
             'password': {'write_only': True}  # Ensures the password is write-only
