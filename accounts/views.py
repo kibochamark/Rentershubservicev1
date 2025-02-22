@@ -158,7 +158,7 @@ class AccountsViewSet(viewsets.ViewSet):
                 "result":{
                     "tokens":tokens,
                     "user_id":obj.id,
-                    "role":obj.role.name
+                    "role":obj.role.role
                 }
             }, status=HTTPStatus.OK)
 
