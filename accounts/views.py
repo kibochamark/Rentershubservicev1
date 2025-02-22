@@ -15,7 +15,7 @@ from rest_framework import  generics, permissions
 from rest_framework.views import APIView
 
 from accounts.models import RentersUser, RentersRole, Otp
-from accounts.serializers import AccountSerializer, RegisterSerializer, RoleSerializerModel, OtpSerializer
+from accounts.serializers import AccountSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, OtpSerializer
 from rest_framework import  viewsets
 
 from accounts.util import send_otp, generate_otp, get_tokens_for_user, verify_otp
@@ -219,7 +219,7 @@ class AccountsViewSet(viewsets.ViewSet):
     def update(self, request):
         pass
 
-    @extend_schema(responses=RegisterSerializer)
+    @extend_schema(responses=UserSerializer)
     def patch(self, request, pk=None):
         """
                 partially update an instance of a user
@@ -227,7 +227,7 @@ class AccountsViewSet(viewsets.ViewSet):
         permission_classes=[permissions.IsAuthenticated]
         # print(request.data, pk)
         obj= get_object_or_404(self.queryset, pk=pk)
-        serializer = RegisterSerializer(obj, data=request.data,
+        serializer = UserSerializer(obj, data=request.data,
                                          partial=True, context={'request':request})  # set partial=True to update a data partially
         if serializer.is_valid(raise_exception=True):
             serializer.save()
