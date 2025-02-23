@@ -58,7 +58,7 @@ class PropertySerializer(serializers.ModelSerializer):
     propertytype=PropertyTypeSerializer(source="property_type", read_only=True)
     location_coords = serializers.SerializerMethodField(read_only=True)  # ✅ Link the method
     property_features=PropertyFeatureSerializer(many=True, read_only=True, source="features")
-
+    postedby=serializers.CharField(read_only=True)
 
 
 
@@ -100,6 +100,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'security_charges',
             'other_charges',
             'posted_by',
+            'postedby',
             'owners_contact',
             'managed_by',
             'space_types',
@@ -114,6 +115,11 @@ class PropertySerializer(serializers.ModelSerializer):
                 coords = obj.location.coords
                 return coords
             return ""
+    
+    def get_postedby(self, obj):
+        if obj and obj.posted_by:
+            return obj.posted_by.first_name + obj.posted_by.last_namern
+        return ""
         
 
 
