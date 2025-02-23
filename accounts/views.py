@@ -18,7 +18,7 @@ from accounts.models import RentersUser, RentersRole, Otp
 from accounts.serializers import AccountSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, OtpSerializer
 from rest_framework import  viewsets
 
-from accounts.util import send_otp, generate_otp, get_tokens_for_user, verify_otp
+from accounts.util import send_message, send_otp, generate_otp, get_tokens_for_user, verify_otp
 from django.utils import timezone
 
 
@@ -199,9 +199,18 @@ class AccountsViewSet(viewsets.ViewSet):
         Create an instance of a user
         """
         body = request.data
+        message=f"""
+        A new
+        account has been registered on Renters Hub. Login into the Admin's 
+        panel to approve them.
+        """
         serializer = RegisterSerializer(data=body, context={'request':request})
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            try:
+                send_message("0769347882", message)
+            except Exception as e:
+                print(e)
             return Response(serializer.data, status=HTTPStatus.CREATED)
         return  Response(RegisterSerializer.errors, status=HTTPStatus.BAD_REQUEST)
 
@@ -237,9 +246,25 @@ class AccountsViewSet(viewsets.ViewSet):
         # print(request.data, pk)
         obj= get_object_or_404(self.queryset, pk=pk)
         serializer = UserSerializer(obj, data=request.data,
-                                         partial=True, context={'request':request})  # set partial=True to update a data partially
+                                         partial=True, context={'request':request})
+        # set partial=True to update a data partially
+
+        status= request.data.get("approval_status")
+        message = f"""
+CONGRATULATIONS! Your Renters Hub account has 
+been approved. Please log in now to post vacant houses. https://renters-hub-front.vercel.app/login
+"""
+
+
+
+        
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            if status and status == "APPROVED":
+                try:
+                    send_message(obj.contact, message)
+                except Exception as e:
+                    print(e)
             return Response(data=serializer.data, status=200)
         return Response(data=serializer.errors, status=HTTPStatus.BAD_REQUEST)
 

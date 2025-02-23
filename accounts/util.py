@@ -24,7 +24,27 @@ def send_otp(mobile, otp):
     headers = {'content-type': 'application/json'}
 
     response = requests.post(url, json=payload, headers=headers)
-    print(response.content)
+    # print(response.content)
+    return response.ok
+
+
+
+def send_message(mobile, message):
+    """
+    Send message via SMS.
+    """
+    url = "https://quicksms.advantasms.com/api/services/sendsms/"
+    payload = {
+        "apikey": settings.SMS_API_KEY,
+        "partnerID": "4283",
+        "message": message,
+        "shortcode": "RENTERS_HUB",
+        "mobile": mobile
+    }
+    headers = {'content-type': 'application/json'}
+
+    response = requests.post(url, json=payload, headers=headers)
+    # print(response.content)
     return response.ok
 
 
@@ -51,7 +71,7 @@ def generate_otp(duration=300):
 
     otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=duration)
     # Generate an OTP using TOTP after every 30 seconds
-    print("Your TOTP is: ", otp.now())
+    # print("Your TOTP is: ", otp.now())
 
 
     return otp.now()
