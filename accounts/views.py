@@ -100,9 +100,9 @@ class AccountsViewSet(viewsets.ViewSet):
         Instantiates and returns the list of permissions that this view requires.
         """
         if self.action == 'list' or self.action == 'retrieve':
-            permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+            permission_classes = [permissions.IsAuthenticated]
         elif self.action == "loginuser" or self.action == 'create' :
-            print(self.action)
+            # print(self.action)
             permission_classes = [permissions.AllowAny]
         else:
             permission_classes = [permissions.IsAuthenticated]
@@ -181,7 +181,12 @@ class AccountsViewSet(viewsets.ViewSet):
         """
         queryset = RentersUser.objects
         status = request.query_params.get("status")
-        if status:
+        role = request.query_params.get("role").lower().upper()
+        # print(role)
+        if status and role:
+            
+            queryset= queryset.filter(role__role=role, approval_status=status.lower().upper()).all()
+        elif status:
             queryset= queryset.filter(approval_status=status.lower().upper()).all()
         else:
             queryset=queryset.all()
