@@ -44,7 +44,7 @@ def send_message(mobile, message):
     headers = {'content-type': 'application/json'}
 
     response = requests.post(url, json=payload, headers=headers)
-    # print(response.content)
+    print(response.content)
     return response.ok
 
 

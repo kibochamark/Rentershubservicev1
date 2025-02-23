@@ -53,7 +53,7 @@ class Property(models.Model):
 
     # ... other fields ...
     is_available = models.BooleanField(default=True)
-    is_approved = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
     rent_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     deposit_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
