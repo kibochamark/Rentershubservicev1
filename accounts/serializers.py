@@ -22,7 +22,7 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model=RentersUser
         fields=[
-            'pk',
+            'id',
             'first_name',
             'last_name',
             'email',
@@ -86,6 +86,8 @@ class OtpSerializer(serializers.ModelSerializer):
             fields=[
                 'secret'
             ]
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentersUser
@@ -103,9 +105,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance , validated_data):
         password= validated_data.get("password")
+        approval_status = validated_data.get("approval_status")
         if password:
             validated_data.pop('password')
             instance.password =make_password(password)
+
+        if approval_status:
+            validated_data.pop("approval_status")
+            instance.approval_status = approval_status
         
         # instance(**validated_data)
         instance.save()

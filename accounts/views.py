@@ -181,7 +181,9 @@ class AccountsViewSet(viewsets.ViewSet):
         """
         queryset = RentersUser.objects
         status = request.query_params.get("status")
-        role = request.query_params.get("role").lower().upper()
+        role = request.query_params.get("role")
+        if role:
+            role = role.lower().upper()
         # print(role)
         if status and role:
             
