@@ -89,7 +89,7 @@ class RentersUser(AbstractUser, models.Model):
 
     role = models.ForeignKey(RentersRole, on_delete=models.CASCADE, null=True)
     approval_status= models.CharField(max_length=20, choices=ApprovalStatus.choices, null=True, default="PENDING")
-    email = models.EmailField("email address", unique=True, nullable=True)
+    email = models.EmailField("email address", unique=True, null=True)
     contact = models.CharField(max_length=10, validators=[RegexValidator(
  regex=r"^\d{10}", message="Phone number must be 10 digits only.")], unique=True)
     isAcceptedTermsAndConditions = models.BooleanField(default=True)
