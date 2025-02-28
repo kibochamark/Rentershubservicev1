@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from django.contrib.gis.measure import D
 
 from accounts.models import RentersUser
 from accounts.permissions import IsApprovedPermissions
