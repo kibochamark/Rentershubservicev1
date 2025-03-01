@@ -172,10 +172,7 @@ class CreateListProperties(generics.ListCreateAPIView):
                 pnt= GEOSGeometry('POINT(' + str(data['lon']) + ' ' + str(data['lat']) + ')', srid=4326)
                 # matching_query=qs.annotate(distance=Distance('location', pnt)).order_by('distance')
                 matching_query = qs.annotate(distance=Distance("location", pnt)).filter(distance__lte=D(km=5)) | qs.filter(address__icontains=address)
-
-    
-                if matching_query.exists():
-                    qs = matching_query
+                qs = matching_query
 
         if userid:
             newqs = qs.filter(posted_by=int(userid)).all().order_by('title', "-id")
