@@ -63,9 +63,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])  # Hash the password
         if validated_data["email"] is None:
-            validated_data["email"]= f"{validated_data["first_name"][0].upper()}{validated_data["last_name"]}@rentershubtest.com"
+            validated_data["email"]= f"{validated_data['first_name'][0].upper()}{validated_data['last_name']}@rentershubtest.com"
         if validated_data["username"] is None:
-            validated_data["username"] = f"{validated_data["first_name"][0].upper()}{validated_data["last_name"]}"
+            validated_data["username"] = f"{validated_data['first_name'][0].upper()}{validated_data['last_name']}"
 
         return super().create(validated_data)
 
