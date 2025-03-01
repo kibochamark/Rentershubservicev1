@@ -215,7 +215,7 @@ class AccountsViewSet(viewsets.ViewSet):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             try:
-                send_message("0769347882", message)
+                send_message("0720902437", message)
             except Exception as e:
                 print(e)
             return Response(serializer.data, status=HTTPStatus.CREATED)
