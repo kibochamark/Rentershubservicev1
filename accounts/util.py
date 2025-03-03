@@ -63,7 +63,7 @@ def get_geocode(address):
         print(e)
         return (400, e)
 
- otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=300)
+otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=300)
 
 def generate_otp(duration=300):
     # Create a secret key (keep it secret!)̥
