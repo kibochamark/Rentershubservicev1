@@ -63,13 +63,13 @@ def get_geocode(address):
         print(e)
         return (400, e)
 
-
+ otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=300)
 
 def generate_otp(duration=300):
     # Create a secret key (keep it secret!)̥
     # secret_key = pyotp.random_base32()
 
-    otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=duration)
+
     # Generate an OTP using TOTP after every 30 seconds
     # print("Your TOTP is: ", otp.now())
 
@@ -81,7 +81,7 @@ def generate_otp(duration=300):
 
 
 def verify_otp(user_otp,  duration=300):
-    otp = pyotp.TOTP(os.environ.get("otp_secret"), interval=duration)
+   
 
     if otp.verify(user_otp):
         return  True
