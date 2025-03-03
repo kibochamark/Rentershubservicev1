@@ -141,7 +141,9 @@ CORS_ALLOWED_ORIGINS=[
     'http://localhost:3000',
     'http://localhost:8000',
     'https://renters-hub-front.vercel.app',
-    'https://rentershub.co.ke'
+    'https://rentershub.co.ke',
+    'www.rentershub.co.ke',
+    'https://www.rentershub.co.ke'
 
 ]
 
