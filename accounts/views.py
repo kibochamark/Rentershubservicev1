@@ -259,7 +259,7 @@ class AccountsViewSet(viewsets.ViewSet):
         status= request.data.get("approval_status")
         message = f"""
 CONGRATULATIONS! Your Renters Hub account has 
-been approved. Please log in now to post vacant houses. https://renters-hub-front.vercel.app/login
+been approved. Please log in now to post vacant houses. https://rentershub.co.ke/login
 """
 
 
