@@ -124,24 +124,6 @@ class PropertySerializer(serializers.ModelSerializer):
         
     
 
-    def update(self, instance , validated_data):
-        status= validated_data.get("is_approved")
-        if status and status == True:
-            validated_data.pop('is_approved')
-            instance.is_approved =status
-            message="""
-CONGRATULATIONS! The property you listed on Renters Hub has been 
-approved. See how it appears on the website https://rentershub.co.ke”
-"""
-            send_message('0720902437', message)
-
-        
-        instance(**validated_data)
-        instance.save()
-       
-       
-        return instance
-
 
 
 

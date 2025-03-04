@@ -242,6 +242,21 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
 
     lookup_field = 'id'
 
+    def perform_update(self, serializer):
+        status = serializer.initial_data["is_approved"]
+        if serializer.is_valid(raise_exception=True):
+
+            if status and status == True:
+        
+                message="""
+                CONGRATULATIONS! The property you listed on Renters Hub has been 
+                approved. See how it appears on the website https://rentershub.co.ke”
+                """
+        
+                send_message('0720902437', message)
+            serializer.save()
+
+
 
 
 class Spacetypesgeneric(generics.ListCreateAPIView):
