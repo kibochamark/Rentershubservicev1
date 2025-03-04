@@ -221,8 +221,7 @@ class CreateListProperties(generics.ListCreateAPIView):
 
         if serializer.is_valid(raise_exception=True):
             message="""
-A new property that needs your 
-immediate attention has been uploaded on Renters Hub.
+A new property that needs your immediate attention has been uploaded on Renters Hub.
 
 """
             send_message('0720902437', message)
@@ -244,22 +243,20 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         status = serializer.initial_data["is_approved"]
-        print(self.kwargs, "kwarfs")
-        obj = get_object_or_404(self.queryset, id=int(self.kwargs.get('id')))
-        if obj:
-
-         print(obj.id)
+        
         if serializer.is_valid(raise_exception=True):
 
 
             if status and status == True:
-        
-                message="""
-                CONGRATULATIONS! The property you listed on Renters Hub has been 
-                approved. See how it appears on the website https://rentershub.co.ke”
-                """
-        
-                send_message('0720902437', message)
+                
+                obj = get_object_or_404(self.queryset, id=int(self.kwargs.get('id')))
+                if obj:
+
+                    message=f"""
+                    CONGRATULATIONS! The property you listed on Renters Hub has been approved. See how it appears on the website https://rentershub.co.ke/property/{obj.id}”
+                    """
+            
+                    send_message(obj.owners_contact, message)
             serializer.save()
 
 

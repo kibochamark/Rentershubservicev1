@@ -207,9 +207,7 @@ class AccountsViewSet(viewsets.ViewSet):
         """
         body = request.data
         message=f"""
-        A new
-        account has been registered on Renters Hub. Login into the Admin's 
-        panel to approve them.
+        A new account has been registered on Renters Hub. Login into the Admin's panel to approve them.
         """
         serializer = RegisterSerializer(data=body, context={'request':request})
         if serializer.is_valid(raise_exception=True):
@@ -258,8 +256,7 @@ class AccountsViewSet(viewsets.ViewSet):
 
         status= request.data.get("approval_status")
         message = f"""
-CONGRATULATIONS! Your Renters Hub account has 
-been approved. Please log in now to post vacant houses. https://rentershub.co.ke/login
+CONGRATULATIONS! Your Renters Hub account has been approved. Please log in now to post vacant houses. https://rentershub.co.ke/login
 """
 
 
