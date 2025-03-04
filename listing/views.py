@@ -238,6 +238,7 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
     serializer_class = PropertySerializer
+    filterset_class =PropertyFilter
 
     lookup_field = 'id'
 
