@@ -108,7 +108,7 @@ class PropertySerializer(serializers.ModelSerializer):
             'updated_at'
         ]
 
-        read_only_fields = ['location', 'is_approved', 'is_available', 'updated_at']
+        read_only_fields = ['location', 'updated_at']
 
 
     def get_location_coords(self, obj):
