@@ -12,7 +12,7 @@ from django.contrib.gis.measure import D
 
 from accounts.models import RentersUser
 from accounts.permissions import IsApprovedPermissions
-from accounts.util import get_geocode
+from accounts.util import get_geocode, send_message
 from listing.filterset import PropertyFilter
 from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis, SpaceType, Unit
 from listing.serializers import PropertySerializer, PropertyTypeSerializer, PropertyAmenitySerializer, \
@@ -219,11 +219,18 @@ class CreateListProperties(generics.ListCreateAPIView):
                 amenities_set.append(amen)
 
 
+        if serializer.is_valid(raise_exception=True):
+            message="""
+A new property that needs your 
+immediate attention has been uploaded on Renters Hub.
 
+"""
+            send_message('0720902437', message)
+            return serializer.save(location=generated_location, features=feature_set, amenities=amenities_set, posted_by=self.request.user)
 
-        return serializer.save(location=generated_location, features=feature_set, amenities=amenities_set, posted_by=self.request.user)
-
-
+        return Response({
+            "error":"Something went wrong"
+        }, status=500)
 
 
 

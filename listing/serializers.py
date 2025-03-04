@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from accounts.util import send_message
 from listing.models import Property, PropertyFeature, PropertyAmenity, SpaceType, Unit, UnitImage, PropertyType, TestGis
 
 
@@ -121,6 +122,26 @@ class PropertySerializer(serializers.ModelSerializer):
             return obj.posted_by.first_name + " " + obj.posted_by.last_name
         return ""
         
+    
+
+    def update(self, instance , validated_data):
+        status= validated_data.get("is_approved")
+        if status and status == True:
+            validated_data.pop('is_approved')
+            instance.is_approved =status
+            message="""
+CONGRATULATIONS! The property you listed on Renters Hub has been 
+approved. See how it appears on the website https://rentershub.co.ke”
+"""
+            send_message('0720902437', message)
+
+        
+        instance(**validated_data)
+        instance.save()
+       
+       
+        return instance
+
 
 
 
