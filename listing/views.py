@@ -244,7 +244,12 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         status = serializer.initial_data["is_approved"]
+        obj = get_object_or_404(self.queryset, id=int(self.kwargs.get('id')))
+        if obj:
+
+         print(obj.id)
         if serializer.is_valid(raise_exception=True):
+
 
             if status and status == True:
         
