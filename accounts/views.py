@@ -4,18 +4,21 @@ from logging import raiseExceptions
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.models import Group, Permission
 from django.db.models.expressions import result
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly, IsAdminUser
 from rest_framework.response import  Response
-from rest_framework import  generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 
 from accounts.models import RentersUser, RentersRole, Otp
-from accounts.serializers import AccountSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, OtpSerializer
+from accounts.permissions import IsApprovedPermissions
+from accounts.serializers import AccountSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, \
+    OtpSerializer, GroupSerializer, PermissionSerializer
 from rest_framework import  viewsets
 
 from accounts.util import send_message, send_otp, generate_otp, get_tokens_for_user, verify_otp
@@ -259,10 +262,12 @@ class AccountsViewSet(viewsets.ViewSet):
 CONGRATULATIONS! Your Renters Hub account has been approved. Please log in now to post vacant houses. https://rentershub.co.ke/login
 """
 
-
+        group_ids = request.data.get('group_ids', [])
 
         
         if serializer.is_valid(raise_exception=True):
+            groups = Group.objects.filter(id__in=group_ids)
+            obj.groups.set(groups)
             serializer.save()
             if status and status == "APPROVED":
                 try:
@@ -678,3 +683,93 @@ class LoginPage(View):
                 "google_client_id": settings.GOOGLE_OAUTH_CLIENT_ID,
             },
         )
+
+
+class GroupGenericView(generics.CreateAPIView):
+    queryset = Group.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
+    serializer_class = GroupSerializer
+
+
+class GroupListView(generics.ListAPIView):
+    queryset = Group.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = GroupSerializer
+
+
+class GroupRetrieveView(generics.RetrieveAPIView):
+    queryset = Group.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = GroupSerializer
+
+    lookup_field = 'id'
+
+
+
+class EditGroupGenericView(generics.UpdateAPIView):
+    queryset = Group.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
+    serializer_class = GroupSerializer
+
+    lookup_field = 'id'
+
+    def perform_update(self,serializer):
+        group = self.get_object()
+        permission_ids = serializer.initial_data.get('permission_ids', [])
+        if serializer.is_valid(raise_exception=True):
+            perms= Permission.objects.filter(id__in=permission_ids)
+            group.permissions.set(perms)
+            return serializer.save()
+
+
+class DeleteGroupGenericView(generics.DestroyAPIView):
+    queryset = Group.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
+    serializer_class = GroupSerializer
+
+    lookup_field = 'id'
+
+
+
+
+
+
+# permissions
+
+
+class PermissionCreateView(generics.CreateAPIView):
+    queryset = Permission.objects.all()
+    serializer_class = PermissionSerializer
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, IsApprovedPermissions]
+
+
+class PermissionListView(generics.ListAPIView):
+    queryset =  Permission.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = PermissionSerializer
+
+class PermissionRetrieveView(generics.RetrieveAPIView):
+    queryset = Permission.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = PermissionSerializer
+
+    lookup_field = 'id'
+
+
+class EditPermissionGenericView(generics.UpdateAPIView):
+    queryset = Permission.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
+    serializer_class = PermissionSerializer
+
+    lookup_field = 'id'
+
+
+class DeletePermissionGenericView(generics.DestroyAPIView):
+    queryset = Permission.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
+    serializer_class = PermissionSerializer
+
+    lookup_field = 'id'
+
+
+

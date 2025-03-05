@@ -1,9 +1,10 @@
 from django.urls import  path, re_path, include
 from rest_framework.decorators import api_view
+from tutorial.quickstart.views import GroupViewSet
 
-
-
-from .views import AccountsViewSet, RolesViewSet, OtpViewset, GoogleLogin, GoogleLoginCallback
+from .views import AccountsViewSet, RolesViewSet, OtpViewset, GoogleLogin, GoogleLoginCallback, GroupRetrieveView, \
+    EditGroupGenericView, DeleteGroupGenericView, GroupListView, GroupGenericView, PermissionListView, \
+    PermissionCreateView, PermissionRetrieveView, DeletePermissionGenericView, EditPermissionGenericView
 
 urlpatterns=[
     # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
@@ -51,6 +52,20 @@ urlpatterns=[
     path('verify/otp/change/password', OtpViewset.as_view({
         'post':'verifyandupdatepassword'
     })),
+
+    path('groups', GroupListView.as_view()),
+    path('group/create', GroupGenericView.as_view()),
+    path('group/<int:pk>/retrieve', GroupRetrieveView.as_view()),
+    path('group/<int:pk>/delete', DeleteGroupGenericView.as_view()),
+    path('group/<int:pk>/update', EditGroupGenericView.as_view()),
+
+
+
+    path('permissions', PermissionListView.as_view()),
+    path('permission/create', PermissionCreateView.as_view()),
+    path('permission/<int:pk>/retrieve', PermissionRetrieveView.as_view()),
+    path('permission/<int:pk>/delete', DeletePermissionGenericView.as_view()),
+    path('permission/<int:pk>/update', EditPermissionGenericView.as_view()),
 
 
 

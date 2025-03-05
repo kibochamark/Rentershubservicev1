@@ -1,12 +1,13 @@
 import datetime
 
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 
 
 from accounts.models import RentersUser, RentersRole, Otp
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission, Group
 from rest_framework import  serializers
 
 
@@ -125,3 +126,41 @@ class UserSerializer(serializers.ModelSerializer):
        
         return instance
 
+class PermissionSerializer(serializers.ModelSerializer):
+
+    content_type_id = serializers.ChoiceField(choices=[
+        ('accounts', 'RentersUser'),  # Replace with your actual models
+        # Add more models as needed
+        ('listing', 'Property'),
+        ('listing', 'PropertyType'),
+        ('listing', 'PropertyFeature'),
+    ])
+
+    class Meta:
+        model = Permission
+        fields = ('id', 'name', 'codename', 'content_type_id')
+
+
+        def create(self,validated_data ):
+            content_type= validated_data.get('content_type_id')
+            print(content_type)
+            app_label, model = content_type.split(",")
+            print(app_label, model)
+            content_type = ContentType.objects.get(app_label=app_label, model=model)
+            #     app_label, model = value.split(',')
+            #     content_type = ContentType.objects.get(app_label=app_label, model=model)
+
+    # def to_internal_value(self, data):
+    #     # Convert 'app_label,model' to content_type_id
+    #     value = data.get('content_type_id')
+    #     app_label, model = value.split(',')
+    #     content_type = ContentType.objects.get(app_label=app_label, model=model)
+    #     data['content_type_id'] = content_type.id
+    #     return super().to_internal_value(data)
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    permissions = PermissionSerializer(read_only=True)
+    class Meta:
+        model = Group
+        fields = ('id', 'name', 'permissions')

@@ -73,6 +73,23 @@ class Property(models.Model):
 
 
 
+    class Meta:
+        permissions = [
+            ("can_verify_client", "Can verify client and ground agent authenticity"),
+            ("can_record_leads", "Can record leads"),
+            ("can_communicate_terms", "Can communicate terms and conditions"),
+            ("can_guide_posting", "Can guide clients on posting properties"),
+            ("can_approve_listings", "Can approve property listings"),
+            ("can_edit_descriptions", "Can edit property descriptions"),
+            ("can_share_client_info", "Can share client information with Admin P"),
+            ("can_remind_posting", "Can remind clients to post properties"),
+            ("can_request_property_info", "Can request property information from ground agents and digital marketers"),
+            ("can_monitor_satisfaction", "Can monitor client satisfaction"),
+            ("can_record_tenant_move_in", "Can record tenant move-in information"),
+            ("can_invoice_clients", "Can invoice clients"),
+            ("can_record_payments", "Can record payments"),
+            ("can_ban_nonpaying_clients", "Can ban non-paying clients"),
+        ]
 
 
 

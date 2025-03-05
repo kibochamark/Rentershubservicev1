@@ -5,6 +5,7 @@ import geocoder
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry
 from django.shortcuts import render, get_object_or_404
+from geocoder import location
 from rest_framework import generics, permissions
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -244,8 +245,12 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         status = serializer.initial_data["is_approved"]
+        address = serializer.initial_data["address"]
+
+        generated_location = None
         
         if serializer.is_valid(raise_exception=True):
+
 
 
             if status and status == True:
@@ -258,7 +263,15 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
                     """
             
                     send_message(obj.owners_contact, message)
-            serializer.save()
+
+
+
+            if address:
+                resstatus, data = get_geocode(address)
+                if resstatus == 200:
+                    pnt = GEOSGeometry('POINT(' + str(data['lon']) + ' ' + str(data['lat']) + ')')
+                    return  serializer.save(location=pnt)
+            return serializer.save()
 
 
 
