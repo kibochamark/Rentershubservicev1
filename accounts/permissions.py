@@ -26,3 +26,60 @@ class IsApprovedPermissions(permissions.DjangoModelPermissions):
 
         return  False
 
+
+
+class CanVerifyClient(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_verify_client')
+
+class CanRecordLeads(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_record_leads')
+
+class CanCommunicateTerms(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_communicate_terms')
+
+class CanGuidePosting(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_guide_posting')
+
+class CanApproveListings(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_approve_listings')
+
+class CanEditDescriptions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_edit_descriptions')
+
+class CanShareClientInfo(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_share_client_info')
+
+class CanRemindPosting(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_remind_posting')
+
+class CanRequestPropertyInfo(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_request_property_info')
+
+class CanMonitorSatisfaction(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_monitor_satisfaction')
+
+class CanRecordTenantMoveIn(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_record_tenant_move_in')
+
+class CanInvoiceClients(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_invoice_clients')
+
+class CanRecordPayments(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_record_payments')
+
+class CanBanNonPayingClients(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm('your_app.can_ban_nonpaying_clients')

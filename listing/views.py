@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from django.contrib.gis.measure import D
 
 from accounts.models import RentersUser
-from accounts.permissions import IsApprovedPermissions
+from accounts.permissions import IsApprovedPermissions, CanEditDescriptions, CanApproveListings
 from accounts.util import get_geocode, send_message
 from listing.filterset import PropertyFilter
 from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis, SpaceType, Unit
@@ -237,7 +237,7 @@ A new property that needs your immediate attention has been uploaded on Renters 
 class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
     """update and delete property"""
     queryset = Property.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions, CanEditDescriptions, CanApproveListings]
     serializer_class = PropertySerializer
     filterset_class =PropertyFilter
 
