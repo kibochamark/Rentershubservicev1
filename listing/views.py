@@ -244,8 +244,8 @@ class UpdatePropertyGeneric(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
     def perform_update(self, serializer):
-        status = serializer.initial_data["is_approved"]
-        address = serializer.initial_data.get("address", "")
+        status = serializer.initial_data.get("is_approved", None)
+        address = serializer.initial_data.get("address", None)
 
         generated_location = None
         
