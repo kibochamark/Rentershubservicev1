@@ -138,20 +138,13 @@ class PermissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Permission
-        fields = ('id', 'name', 'codename', 'content_type_id')
+        fields = ('id', 'name',  'content_type_id')
 
 
-        def create(self,validated_data ):
-            content_type= validated_data.get('content_type_id')
-            print(content_type)
-            app_label, model = content_type.split(",")
-            print(app_label, model)
-            content_type = ContentType.objects.get(app_label=app_label, model=model)
-            #     app_label, model = value.split(',')
-            #     content_type = ContentType.objects.get(app_label=app_label, model=model)
+
 
     # def to_internal_value(self, data):
-    #     # Convert 'app_label,model' to content_type_id
+    #     # Convert 'app_label,model' to content_type_sid
     #     value = data.get('content_type_id')
     #     app_label, model = value.split(',')
     #     content_type = ContentType.objects.get(app_label=app_label, model=model)
