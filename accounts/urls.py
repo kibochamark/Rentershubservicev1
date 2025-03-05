@@ -55,17 +55,17 @@ urlpatterns=[
 
     path('groups', GroupListView.as_view()),
     path('group/create', GroupGenericView.as_view()),
-    path('group/<int:pk>/retrieve', GroupRetrieveView.as_view()),
-    path('group/<int:pk>/delete', DeleteGroupGenericView.as_view()),
-    path('group/<int:pk>/update', EditGroupGenericView.as_view()),
+    path('group/<int:id>/retrieve', GroupRetrieveView.as_view()),
+    path('group/<int:id>/delete', DeleteGroupGenericView.as_view()),
+    path('group/<int:id>/update', EditGroupGenericView.as_view()),
 
 
 
     path('permissions', PermissionListView.as_view()),
     # path('permission/create', PermissionCreateView.as_view()),
-    path('permission/<int:pk>/retrieve', PermissionRetrieveView.as_view()),
-    path('permission/<int:pk>/delete', DeletePermissionGenericView.as_view()),
-    path('permission/<int:pk>/update', EditPermissionGenericView.as_view()),
+    path('permission/<int:id>/retrieve', PermissionRetrieveView.as_view()),
+    path('permission/<int:id>/delete', DeletePermissionGenericView.as_view()),
+    path('permission/<int:id>/update', EditPermissionGenericView.as_view()),
 
 
 
