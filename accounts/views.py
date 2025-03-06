@@ -544,8 +544,8 @@ class OtpViewset(viewsets.ViewSet):
 
 
             # print(otp, secret_key)
-            if status == 200:
-                send_otp(mobile=contact, otp=otp)
+           
+            send_otp(mobile=contact, otp=otp)
 
 
             return Response({
