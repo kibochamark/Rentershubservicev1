@@ -163,7 +163,7 @@ class CreateListProperties(generics.ListCreateAPIView):
 
 
     
-        qs = super().get_queryset()
+        qs = super().get_queryset().filter()
 
         if address:
             status, data= get_geocode(address)

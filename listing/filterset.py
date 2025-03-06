@@ -9,7 +9,8 @@ class PropertyFilter(django_filters.FilterSet):
     condition_name=django_filters.CharFilter(field_name="features__name", lookup_expr="icontains")
     managed_by=django_filters.CharFilter(field_name="managed_by", lookup_expr="icontains")
     is_approved=django_filters.BooleanFilter(field_name="is_approved")
+    is_available=django_filters.BooleanFilter(field_name="is_available")
 
     class Meta:
         model = Property
-        fields =['rent_price', 'propertytype_name', 'managed_by', 'is_approved', 'condition_name']
+        fields =['rent_price', 'propertytype_name', 'managed_by', 'is_approved', 'is_available','condition_name']
