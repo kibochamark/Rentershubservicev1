@@ -1,2 +1,3 @@
 ./rentersservice/.env
 .venv
+.env
