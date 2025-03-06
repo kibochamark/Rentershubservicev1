@@ -49,25 +49,23 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentersUser
         fields = [
-            'email',
             'password',
             'first_name',
             'last_name',
             'role',
             'contact',
-            'username'
+        
         ]
-        read_only=['username', 'email']
         extra_kwargs = {
-            'password': {'write_only': True}  # Ensures the password is write-only
+            'password': {'write_only': True},  # Ensures the password is write-only,
         }
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])  # Hash the password
-        if validated_data["email"] is None:
-            validated_data["email"]= f"{validated_data['first_name'][0].upper()}{validated_data['last_name']}@rentershubtest.com"
-        if validated_data["username"] is None:
-            validated_data["username"] = f"{validated_data['first_name'][0].upper()}{validated_data['last_name']}"
+     
+        validated_data["email"]= f"{validated_data['first_name'][0].upper()}{validated_data['last_name']}@rentershubtest.com"
+        
+        validated_data["username"] = f"{validated_data['first_name'][0].upper()}{validated_data['last_name']}"
 
         return super().create(validated_data)
 
