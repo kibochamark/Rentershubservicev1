@@ -514,7 +514,9 @@ class OtpViewset(viewsets.ViewSet):
             print(contact)
 
 
-            otp=generate_otp()
+            status, otp=generate_otp(contact=contact)
+
+            # print(otp)
 
             # # # add secret to otp
             # #
@@ -542,7 +544,8 @@ class OtpViewset(viewsets.ViewSet):
 
 
             # print(otp, secret_key)
-            send_otp(mobile=contact, otp=otp)
+            if status == 200:
+                send_otp(mobile=contact, otp=otp)
 
 
             return Response({
@@ -586,7 +589,7 @@ class OtpViewset(viewsets.ViewSet):
 
             # print(obj.otp_secret)
 
-            if not verify_otp(int(user_otp), secret_key=obj.otp_secret):
+            if not verify_otp(contact=obj.contact, user_entered_otp=user_otp):
                 return Response({
                     "error": "invalid otp"
                 }, status=HTTPStatus.BAD_REQUEST)
@@ -594,8 +597,6 @@ class OtpViewset(viewsets.ViewSet):
             password = make_password(password)
             serializer = RegisterSerializer(obj, data={
                 "password":password,
-                "otp":user_otp,
-                "max_out_otp":3
             }, partial=True, context={'request':request})
 
 
@@ -622,6 +623,7 @@ class OtpViewset(viewsets.ViewSet):
             # print(request.user)
 
             user_otp = request.data.get('otp')
+            contact = request.data.get('contact')
 
             # print(contact)
 
@@ -634,9 +636,9 @@ class OtpViewset(viewsets.ViewSet):
 
             # print(obj.otp_secret)
 
-            if not verify_otp(int(user_otp)):
+            if not verify_otp(contact, user_otp):
                 return Response({
-                    "error": "invalid otp"
+                    "error": "invalid otp or expired"
                 }, status=HTTPStatus.BAD_REQUEST)
 
 

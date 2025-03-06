@@ -123,6 +123,13 @@ class RentersUser(AbstractUser, models.Model):
 class Otp(models.Model):
 
     secret = models.CharField(max_length=2000, unique=True)
+    contact=models.CharField(max_length=10, unique=True, default="07")
+    expiration=models.DateTimeField(default=datetime.now())
+
+
+    
+    created_at = models.DateField(auto_created=True,default=datetime.now())
+    updated_at = models.DateField(auto_now=True)
 
 
 
