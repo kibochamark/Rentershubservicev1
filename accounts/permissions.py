@@ -42,7 +42,7 @@ class CanVerifyClient(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_verify_client', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -83,7 +83,7 @@ class CanApproveListings(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_approve_listings', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -105,7 +105,7 @@ class CanEditDescriptions(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_edit_descriptions', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -127,7 +127,7 @@ class CanShareClientInfo(permissions.BasePermission):
             return False
 
         try:
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_share_client_info', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -151,7 +151,7 @@ class CanRemindPosting(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_remind_posting', content_type=content_type)
 
 
@@ -175,7 +175,7 @@ class CanRequestPropertyInfo(permissions.BasePermission):
         try:
             # Get the permission object
              
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_request_property_info', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -197,7 +197,7 @@ class CanMonitorSatisfaction(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_monitor_satisfaction', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -220,7 +220,7 @@ class CanRecordTenantMoveIn(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_record_tenant_move_in', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -242,7 +242,7 @@ class CanInvoiceClients(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_invoice_clients', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -264,7 +264,7 @@ class CanRecordPayments(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_record_payments', content_type=content_type)
 
             # Check if the user has the permission directly or through a group
@@ -287,7 +287,7 @@ class CanBanNonPayingClients(permissions.BasePermission):
 
         try:
             # Get the permission object
-            content_type = ContentType.objects.get(app_label='listing', model='Property') #replace your_model_name
+            content_type = ContentType.objects.get(app_label='listing', model='property') #replace your_model_name
             permission = Permission.objects.get(codename='can_ban_nonpaying_clients', content_type=content_type)
 
             # Check if the user has the permission directly or through a group

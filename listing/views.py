@@ -150,7 +150,7 @@ class CreateListProperties(generics.ListCreateAPIView):
 
     #filterset_fields=('title')
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions, CanEditDescriptions, CanApproveListings]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
     #filter_backends = []
     filterset_class =PropertyFilter
 
