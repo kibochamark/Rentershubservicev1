@@ -38,7 +38,7 @@ import os
 #     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
 #     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
-# GDAL_LIBRARY_PATH = r'C:\\OSGeo4W\\bin\\gdal309.dll'
+# GDAL_LIBRARY_PATH = r'C:\\OSGeo4W\\bin\\gdal310.dll'
 
 # Replace the DATABASES section of your settings.py with this
 # tmpPostgres = urlparse(env('DATABASE_URL'))

@@ -149,7 +149,8 @@ class CreateListProperties(generics.ListCreateAPIView):
     serializer_class = PropertySerializer
 
     #filterset_fields=('title')
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions, CanEditDescriptions, CanApproveListings]
     #filter_backends = []
     filterset_class =PropertyFilter
 
