@@ -27,23 +27,23 @@ from os import getenv
 from urllib.parse import urlparse
 
 import os
-if os.name == 'nt':
-    import platform
-    OSGEO4W = r"C:\OSGeo4W"
-    # if '64' in platform.architecture()[0]:
-    #     OSGEO4W += "64"
-    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
-    os.environ['OSGEO4W_ROOT'] = OSGEO4W
-    os.environ['GDAL_DATA'] = OSGEO4W + r"\apps\gdal"
-    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
-    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+# if os.name == 'nt':
+#     import platform
+#     OSGEO4W = r"C:\OSGeo4W"
+#     # if '64' in platform.architecture()[0]:
+#     #     OSGEO4W += "64"
+#     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+#     os.environ['OSGEO4W_ROOT'] = OSGEO4W
+#     os.environ['GDAL_DATA'] = OSGEO4W + r"\apps\gdal"
+#     os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+#     os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
 
-GDAL_LIBRARY_PATH = r'C:\\OSGeo4W\\bin\\gdal310.dll'
+# GDAL_LIBRARY_PATH = r'C:\\OSGeo4W\\bin\\gdal310.dll'
 
 # Replace the DATABASES section of your settings.py with this
-tmpPostgres = urlparse(env('DATABASE_URL'))
+# tmpPostgres = urlparse(env('DATABASE_URL'))
 
-# tmpPostgres = urlparse(os.environ.get('DATABASE_URL'))
+tmpPostgres = urlparse(os.environ.get('DATABASE_URL'))
 # tmpPostgres = urlparse(os.getenv('DATABASE_URL'))
 #
 DATABASES = {
@@ -66,9 +66,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECRET_KEY = os.get_env('SECRET_KEY')
-SECRET_KEY = env('SECRET_KEY')
+# SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -323,9 +323,9 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
 # GEOCODE_API_KEY=env("GEOCODE_API_KEY")
-GOOGLE_API_KEY=env("GOOGLE_API_KEY")
+# GOOGLE_API_KEY=env("GOOGLE_API_KEY")
 # GEOCODE_API_KEY=os.environ.get('GEOCODE_API_KEY')
-# GOOGLE_API_KEY=os.environ.get('GOOGLE_API_KEY')
+GOOGLE_API_KEY=os.environ.get('GOOGLE_API_KEY')
 # GOOGLE_API_KEY=os.getenv('GOOGLE_API_KEY')
-# SMS_API_KEY=os.environ.get('SMS_API_KEY')
-SMS_API_KEY=env('SMS_API_KEY')
+SMS_API_KEY=os.environ.get('SMS_API_KEY')
+# SMS_API_KEY=env('SMS_API_KEY')
