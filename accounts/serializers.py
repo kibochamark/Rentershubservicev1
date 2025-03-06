@@ -57,6 +57,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'contact',
             'username'
         ]
+        read_only=['username', 'email']
         extra_kwargs = {
             'password': {'write_only': True}  # Ensures the password is write-only
         }
