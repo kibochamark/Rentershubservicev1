@@ -119,9 +119,17 @@ class AccountsViewSet(viewsets.ViewSet):
 
         try:
             contact = request.data.get("contact")
+            username = request.data.get("username")
             password = request.data.get("password")
+            obj=None
 
-            obj =get_object_or_404(self.queryset, contact = contact)
+            if username:
+                 obj =get_object_or_404(self.queryset, username = username)
+                 
+            if contact:
+                 obj =get_object_or_404(self.queryset, contact = contact)
+           
+           
 
             #print(obj.username)
 
