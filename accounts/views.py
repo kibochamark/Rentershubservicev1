@@ -15,9 +15,9 @@ from rest_framework.response import  Response
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 
-from accounts.models import RentersUser, RentersRole, Otp
+from accounts.models import Connections, RentersUser, RentersRole, Otp
 from accounts.permissions import IsApprovedPermissions
-from accounts.serializers import AccountSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, \
+from accounts.serializers import AccountSerializer, ConnectionSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, \
     OtpSerializer, GroupSerializer, PermissionSerializer
 from rest_framework import  viewsets
 
@@ -783,3 +783,16 @@ class DeletePermissionGenericView(generics.DestroyAPIView):
 
 
 
+class ConnectionGenericView(generics.ListCreateAPIView):
+    queryset = Connections.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ConnectionSerializer
+
+
+
+class UpdateDeleteConnectionGenericView(generics.ListCreateAPIView):
+    queryset = Connections.objects.all()
+    permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
+    serializer_class = ConnectionSerializer
+
+    lookup_field = 'id'

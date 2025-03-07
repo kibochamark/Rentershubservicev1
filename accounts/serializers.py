@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 
 
-from accounts.models import RentersUser, RentersRole, Otp
+from accounts.models import Connections, RentersUser, RentersRole, Otp
 from django.contrib.auth.models import Permission, Group
 from rest_framework import  serializers
 
@@ -156,3 +156,10 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('id', 'name')
+
+
+
+class ConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Connections
+        fields = "__all__"

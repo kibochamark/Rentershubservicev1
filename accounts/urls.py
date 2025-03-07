@@ -2,9 +2,9 @@ from django.urls import  path, re_path, include
 from rest_framework.decorators import api_view
 from tutorial.quickstart.views import GroupViewSet
 
-from .views import AccountsViewSet, RolesViewSet, OtpViewset, GoogleLogin, GoogleLoginCallback, GroupRetrieveView, \
+from .views import AccountsViewSet, ConnectionGenericView, RolesViewSet, OtpViewset, GoogleLogin, GoogleLoginCallback, GroupRetrieveView, \
     EditGroupGenericView, DeleteGroupGenericView, GroupListView, GroupGenericView, PermissionListView, \
-    PermissionCreateView, PermissionRetrieveView, DeletePermissionGenericView, EditPermissionGenericView
+    PermissionCreateView, PermissionRetrieveView, DeletePermissionGenericView, EditPermissionGenericView, UpdateDeleteConnectionGenericView
 
 urlpatterns=[
     # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
@@ -53,6 +53,11 @@ urlpatterns=[
         'post':'verifyandupdatepassword'
     })),
 
+    path('connections', ConnectionGenericView.as_view()),
+    path('connection', UpdateDeleteConnectionGenericView.as_view()),
+
+    path('groups', GroupListView.as_view()),
+   
     path('groups', GroupListView.as_view()),
     path('group/create', GroupGenericView.as_view()),
     path('group/<int:id>/retrieve', GroupRetrieveView.as_view()),

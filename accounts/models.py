@@ -133,3 +133,20 @@ class Otp(models.Model):
 
 
 
+class Connections(models.Model):
+    connectionfullname=models.TextField(unique=True)
+    contact = models.CharField(max_length=10, validators=[RegexValidator(
+ regex=r"^\d{10}", message="Phone number must be 10 digits only.")], unique=True)
+    propertylink = models.SlugField(max_length=2000, null=True)
+    created_at = models.DateField(auto_created=True, auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    is_paid = models.BooleanField(default=False)
+    
+
+
+    def __str__(self):
+        return super().__str__(f"{self.connectionfullname} - {self.propertylink}")
+
+
+
