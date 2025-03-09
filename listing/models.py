@@ -178,7 +178,7 @@ class Connections(models.Model):
     
 
     propertylink = models.SlugField(max_length=2000, null=True)
-    property = models.ForeignKey(Property, on_delete=models.SET_NULL, null=True,blank=True)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
 
 
     moved_in=models.BooleanField(default=False)
@@ -206,4 +206,6 @@ class Revenue(models.Model):
 
 
     def __str__(self):
-        return super().__str__(f"{self.amount} - {self.created_
+        return super().__str__(f"{self.amount} - {self.created_at}")
+
+
