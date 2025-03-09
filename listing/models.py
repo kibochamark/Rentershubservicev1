@@ -178,7 +178,7 @@ class Connections(models.Model):
     
 
     propertylink = models.SlugField(max_length=2000, null=True)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.SET_NULL, default="")
 
 
     moved_in=models.BooleanField(default=False)
