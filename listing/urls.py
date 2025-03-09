@@ -1,6 +1,6 @@
 from django.urls import path
 
-from listing.views import PropertyGenericView, PropertyTypeGenericView, PropertyAmmenityGenericView, \
+from listing.views import PropertyGenericView, PropertyTypeGenericView, PropertyAmmenityGenericView, RevenueGeneric, RevenueUpdateDelete, SummaryViewSet, \
     UpdatePropertyTypeGeneric, CreateListProperties, PropertyFeatureGenericView, UpdatePropertyFeatureGeneric, \
     UpdatePropertyGeneric, Spacetypesgeneric, UpdateSpaceTypeGeneric, Unitgeneric, UpdateUnitGeneric
 
@@ -19,5 +19,17 @@ urlpatterns=[
 
     path('unit', Unitgeneric.as_view(), name="unitview"),
     path('unit/<int:id>/', UpdateUnitGeneric.as_view(), name="updateunitviewupdate"),
+
+    path('revenue', RevenueGeneric.as_view(), name="revenue"),
+    path('revenue/<int:id>/', RevenueUpdateDelete.as_view(), name="revenueviewupdate"),
+
+
+    path('<int:user_id>/getsummarybylandlordorgroundagent/', SummaryViewSet.as_view({
+        'get':'get_tenant_groundagent_summary'
+    })),
+
+    path('adminsummary', SummaryViewSet.as_view({
+        'get':'get_admin_summary'
+    }))
 
 ]

@@ -6,6 +6,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+
 # Create your models here.
 class RentersRole(models.Model):
     class Role(models.TextChoices):
@@ -130,23 +131,6 @@ class Otp(models.Model):
     
     created_at = models.DateField(auto_created=True,default=datetime.now())
     updated_at = models.DateField(auto_now=True)
-
-
-
-class Connections(models.Model):
-    connectionfullname=models.TextField(unique=True)
-    contact = models.CharField(max_length=10, validators=[RegexValidator(
- regex=r"^\d{10}", message="Phone number must be 10 digits only.")], unique=True)
-    propertylink = models.SlugField(max_length=2000, null=True)
-    created_at = models.DateField(auto_created=True, auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
-
-    is_paid = models.BooleanField(default=False)
-    
-
-
-    def __str__(self):
-        return super().__str__(f"{self.connectionfullname} - {self.propertylink}")
 
 
 

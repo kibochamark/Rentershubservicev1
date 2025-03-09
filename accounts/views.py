@@ -10,14 +10,14 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly, IsAdminUser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import  Response
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status,authentication
 from rest_framework.views import APIView
 
-from accounts.models import Connections, RentersUser, RentersRole, Otp
+from accounts.models import RentersUser, RentersRole
 from accounts.permissions import IsApprovedPermissions
-from accounts.serializers import AccountSerializer, ConnectionSerializer, UserSerializer, RegisterSerializer, RoleSerializerModel, \
+from accounts.serializers import AccountSerializer,  UserSerializer, RegisterSerializer, RoleSerializerModel, \
     OtpSerializer, GroupSerializer, PermissionSerializer
 from rest_framework import  viewsets
 
@@ -36,6 +36,9 @@ from urllib.parse import urljoin
 import requests
 from django.urls import reverse
 import os
+
+from listing.models import Connections
+from listing.serializers import ConnectionSerializer
 
 
 
@@ -224,7 +227,7 @@ class AccountsViewSet(viewsets.ViewSet):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             try:
-                send_message("0720902437", message)
+                send_message("0715472326", message)
             except Exception as e:
                 print(e)
             return Response(serializer.data, status=HTTPStatus.CREATED)
@@ -790,7 +793,7 @@ class ConnectionGenericView(generics.ListCreateAPIView):
 
 
 
-class UpdateDeleteConnectionGenericView(generics.ListCreateAPIView):
+class UpdateDeleteConnectionGenericView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Connections.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions, IsAdminUser]
     serializer_class = ConnectionSerializer

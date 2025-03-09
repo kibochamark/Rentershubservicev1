@@ -2,6 +2,8 @@ from django.contrib.gis.db import models
 
 from accounts.models import RentersUser
 from django.core.exceptions import  ValidationError
+from django.core.validators import RegexValidator
+
 
 
 def check_phone(value):
@@ -166,5 +168,44 @@ class TestGis(models.Model):
 
 
 
+
+
+
+class Connections(models.Model):
+    connectionfullname=models.TextField(unique=True)
+    contact = models.CharField(max_length=10, validators=[RegexValidator(
+ regex=r"^\d{10}", message="Phone number must be 10 digits only.")], unique=True)
+    
+
+    propertylink = models.SlugField(max_length=2000, null=True)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+
+
+    moved_in=models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=False)
+    commission = models.DecimalField(max_digits=18, decimal_places=2)
+
+
+    created_at = models.DateField(auto_created=True, auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+    
+
+
+    def __str__(self):
+        return super().__str__(f"{self.connectionfullname} - {self.propertylink}")
+
+
+
+
+class Revenue(models.Model):
+    amount=models.DecimalField(max_digits=18, decimal_places=2)
+
+    created_at = models.DateField(auto_created=True, auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+    
+
+
+    def __str__(self):
+        return super().__str__(f"{self.amount} - {self.created_at}")
 
 

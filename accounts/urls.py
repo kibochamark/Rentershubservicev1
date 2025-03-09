@@ -54,7 +54,7 @@ urlpatterns=[
     })),
 
     path('connections', ConnectionGenericView.as_view()),
-    path('connection', UpdateDeleteConnectionGenericView.as_view()),
+    path('connection/<int:id>/', UpdateDeleteConnectionGenericView.as_view()),
 
     path('groups', GroupListView.as_view()),
    

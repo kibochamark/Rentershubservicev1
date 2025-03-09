@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from accounts.util import send_message
-from listing.models import Property, PropertyFeature, PropertyAmenity, SpaceType, Unit, UnitImage, PropertyType, TestGis
+from listing.models import Connections, Property, PropertyFeature, PropertyAmenity, Revenue, SpaceType, Unit, UnitImage, PropertyType, TestGis
 
 
 class UnitImageSerializer(serializers.ModelSerializer):
@@ -125,6 +125,50 @@ class PropertySerializer(serializers.ModelSerializer):
     
 
 
+class RevenueSerializer(serializers.Serializer):
+    class Meta:
+        model=Revenue
+        fields="__all__"
+
+
+
+class ConnectionPropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Property
+        fields=[
+            'city',
+            'state',
+            'country',
+            'address',
+            'owners_contact',
+            'managed_by',
+            'rent_price',
+            'deposit_amount'
+        ]
+
+
+class ConnectionSerializer(serializers.ModelSerializer):
+    propertydata=ConnectionPropertySerializer(read_only=True)
+    class Meta:
+        model = Connections
+        fields = [
+            'connectionfullname',
+    'contact',
+    
+
+    'propertylink',
+    'property',
+    'propertydata',
+
+
+    'moved_in',
+    'is_paid',
+    'commission',
+
+
+    'created_at',
+    'updated_at'   
+        ]
 
 
 

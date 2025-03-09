@@ -6,7 +6,7 @@ from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import GEOSGeometry
 from django.shortcuts import render, get_object_or_404
 from geocoder import location
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from django.contrib.gis.measure import D
@@ -15,9 +15,9 @@ from accounts.models import RentersUser
 from accounts.permissions import IsApprovedPermissions, CanEditDescriptions, CanApproveListings
 from accounts.util import get_geocode, send_message
 from listing.filterset import PropertyFilter
-from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, TestGis, SpaceType, Unit
+from listing.models import Property, PropertyType, PropertyAmenity, PropertyFeature, Revenue, TestGis, SpaceType, Unit
 from listing.serializers import PropertySerializer, PropertyTypeSerializer, PropertyAmenitySerializer, \
-    PropertyFeatureSerializer, SpaceTypeSerializer, UnitSerializer
+    PropertyFeatureSerializer, RevenueSerializer, SpaceTypeSerializer, UnitSerializer
 
 
 # Create your views here.
@@ -226,7 +226,7 @@ class CreateListProperties(generics.ListCreateAPIView):
 A new property that needs your immediate attention has been uploaded on Renters Hub.
 
 """
-            send_message('0720902437', message)
+            send_message('0740399167', message)
             return serializer.save(location=generated_location, features=feature_set, amenities=amenities_set, posted_by=self.request.user)
 
         return Response({
@@ -316,3 +316,143 @@ class UpdateUnitGeneric(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UnitSerializer
 
     lookup_field = 'id'
+
+
+
+
+# revenue
+class RevenueGeneric(generics.ListCreateAPIView):
+    queryset = Revenue.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions]
+    serializer_class = RevenueSerializer
+
+    
+
+class RevenueUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Revenue.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsApprovedPermissions, permissions.IsAdminUser, CanApproveListings, CanEditDescriptions]
+    serializer_class = RevenueSerializer
+
+    lookup_field='id'
+
+
+
+
+# summary
+
+class SummaryViewSet(viewsets.ViewSet):
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        print(self.action)
+        if self.action == 'get_admin_summary' or self.action == "get_tenant_groundagent_summary":
+            permission_classes = [permissions.IsAuthenticated, IsApprovedPermissions]
+        else:
+            permission_classes = [permissions.AllowAny]
+        return [permission() for permission in permission_classes]
+
+
+    def get_tenant_groundagent_summary(self, request, user_id=None):
+
+        """
+        retrieve total no of properties
+        retrieve total no of approved properties
+        retrieve total no of pending properties
+
+        per user
+        
+        """
+
+        user = get_object_or_404(RentersUser, id=user_id)
+
+        if user is None:
+            return Response({
+                "error":"User does not exist"
+            }, status=404)
+        
+        listings=Property.objects.filter(posted_by=user_id).exists()
+
+
+        if listings is None:
+
+            return Response({
+                "error":"User does not have existing properties"
+            }, status=200)
+        
+
+        approved_count = Property.objects.filter(is_approved=True).count()
+        pending_count = Property.objects.filter(is_approved=False).count()
+        total_count=Property.objects.count()
+
+
+        return Response({
+            "approved_properties":approved_count,
+            "pending_properties":pending_count,
+            "total_properties":total_count
+
+        }, status=200)
+    
+
+    def get_admin_summary(self, request):
+        user= request.user
+
+    
+        if user.role is None:
+            return Response({
+                "error":"You dont have an existing role"
+            }, status=403)
+
+        if  user.role.role != "ADMIN":
+            return Response({
+                "error":"you are not authorized to perform this action"
+            }, status=403)
+        
+
+        approved_count = Property.objects.filter(is_approved=True).count()
+        pending_count = Property.objects.filter(is_approved=False).count()
+        total_count=Property.objects.count()
+        approved_landlords_count=RentersUser.objects.filter(role__role="LANDLORD", is_approved=False).count()
+        pending_landlords_count=RentersUser.objects.filter(role__role="LANDLORD", is_approved=True).count()
+        pending_groundagents_count=RentersUser.objects.filter(role__role="GROUNDAGENT", is_approved=False).count()
+        pending_admins_count=RentersUser.objects.filter(role__role="ADMIN", is_approved=False).count()
+        approved_admins_count=RentersUser.objects.filter(role__role="ADMIN", is_approved=True).count()
+        approved_groundagents_count=RentersUser.objects.filter(role__role="GROUNDAGENT", is_approved=True).count()
+        total_count=Property.objects.count()
+        total_admins=RentersUser.objects.filter(role__role="ADMIN").count()
+        total_landlords=RentersUser.objects.filter(role__role="LANDLORD").count()
+        total_groundagents=RentersUser.objects.filter(role__role="GROUNDAGENT").count()
+        total_users=RentersUser.objects.count()
+
+
+        return Response({
+            "approved_properties":approved_count,
+            "pending_properties":pending_count,
+            "total_properties":total_count,
+
+
+            "total_users":total_users,
+            "totaladmins":total_admins,
+            "total_landlords":total_landlords,
+            "total_groundagents":total_groundagents,
+
+            "approved_admins":approved_admins_count,
+            "pending_admins":pending_admins_count,
+
+            "approved_landlords":approved_landlords_count,
+            "pending_landlords":pending_landlords_count,
+
+            "approved_agents":approved_groundagents_count,
+            "pending_agents":pending_groundagents_count
+
+        }, status=200)
+        
+
+
+
+        
+
+
+
