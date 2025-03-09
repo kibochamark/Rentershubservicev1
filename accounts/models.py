@@ -14,7 +14,7 @@ class RentersRole(models.Model):
         LANDLORD= "LANDLORD", 'Landlord'
         GROUNDAGENT = "GROUNDAGENT", 'GroundAgent'
         ADMINQ = "ADMINQ", 'AdminQ'
-        GROUNDAGENT = "GUEST", 'Guest'
+        GUEST = "GUEST", 'Guest'
         FINANCEADMIN = "FINANCEADMIN", 'Financeadmin'
 
     role = models.CharField(max_length=50, choices=Role.choices, unique=True)
