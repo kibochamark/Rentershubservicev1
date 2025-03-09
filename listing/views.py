@@ -405,7 +405,7 @@ class SummaryViewSet(viewsets.ViewSet):
                 "error":"You dont have an existing role"
             }, status=403)
 
-        if  user.role.role != "ADMIN":
+        if  user.role.role != "ADMIN" or user.role.role != "ADMINQ":
             return Response({
                 "error":"you are not authorized to perform this action"
             }, status=403)

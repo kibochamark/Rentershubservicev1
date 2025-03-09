@@ -13,6 +13,9 @@ class RentersRole(models.Model):
         ADMIN = "ADMIN", 'Admin'
         LANDLORD= "LANDLORD", 'Landlord'
         GROUNDAGENT = "GROUNDAGENT", 'GroundAgent'
+        ADMINQ = "ADMINQ", 'AdminQ'
+        GROUNDAGENT = "GUEST", 'Guest'
+        FINANCEADMIN = "FINANCEADMIN", 'Financeadmin'
 
     role = models.CharField(max_length=50, choices=Role.choices, unique=True)
     created_at= models.DateField(auto_created=True, auto_now_add=True)
